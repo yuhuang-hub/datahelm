@@ -1,0 +1,35 @@
+{
+  "appId": "com.zcode.datahelm",
+  "productName": "DataHelm",
+  "copyright": "Copyright © 2026 zcode",
+  "directories": {
+    "output": "release"
+  },
+  "files": [
+    "electron/**/*",
+    "dist/**/*"
+  ],
+  "asarUnpack": [
+    "**/*.wasm"
+  ],
+  "win": {
+    "icon": "electron/icons/icon.png",
+    "target": [
+      { "target": "nsis", "arch": ["x64"] },
+      { "target": "portable", "arch": ["x64"] }
+    ]
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "DataHelm",
+    "deleteAppDataOnUninstall": false,
+    "artifactName": "DataHelm-Setup-${version}.${ext}"
+  },
+  "portable": {
+    "artifactName": "DataHelm-Portable-${version}.${ext}"
+  }
+}

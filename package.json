@@ -1,0 +1,44 @@
+{
+  "name": "datahelm",
+  "productName": "DataHelm",
+  "version": "9.27.52",
+  "description": "DataHelm — Navicat 风格桌面数据库客户端（独立实现）：MySQL / PostgreSQL / SQLite / SQL Server，连接管理、对象树、数据表格编辑、SQL 查询、表设计器、SSH 隧道",
+  "main": "electron/main.js",
+  "author": "zcode",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "build": "vite build",
+    "start": "electron .",
+    "selftest": "node scripts/selftest.js",
+    "dist:win": "vite build && electron-builder --win nsis portable"
+  },
+  "dependencies": {
+    "ioredis": "^6.0.0",
+    "mongodb": "^7.6.0",
+    "mysql2": "^3.11.0",
+    "oracledb": "^7.0.1",
+    "pg": "^8.13.0",
+    "sql.js": "^1.11.0",
+    "ssh2": "^1.16.0",
+    "tedious": "^18.6.0"
+  },
+  "devDependencies": {
+    "@ant-design/icons": "^5.5.1",
+    "@codemirror/autocomplete": "^6.18.0",
+    "@codemirror/lang-sql": "^6.8.0",
+    "@codemirror/language": "^6.10.0",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/theme-one-dark": "^6.1.2",
+    "@codemirror/view": "^6.34.0",
+    "@uiw/react-codemirror": "^4.23.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "antd": "^5.21.0",
+    "chrome-remote-interface": "^0.34.0",
+    "electron": "^33.0.0",
+    "electron-builder": "^26.15.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vite": "^5.4.8"
+  }
+}
