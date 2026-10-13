@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- DataHelm 软件图标：原子（电子绕原子核转）——品牌绿圆角底、白色三椭圆轨道、
+       金色原子核 + 三颗电子；与主窗/任务栏图标、启动动画、空状态占位共用同一设计 -->
+  <defs>
+    <linearGradient id="dhbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12a97f" />
+      <stop offset="1" stop-color="#0b6e56" />
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="30" fill="url(#dhbg)" />
+  <!-- 三条轨道（各转 60°，交汇成原子花纹） -->
+  <g fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round">
+    <ellipse cx="64" cy="64" rx="45" ry="17" />
+    <ellipse cx="64" cy="64" rx="45" ry="17" transform="rotate(60 64 64)" />
+    <ellipse cx="64" cy="64" rx="45" ry="17" transform="rotate(120 64 64)" />
+  </g>
+  <!-- 原子核（金芯，描一圈底色与轨道线分离） -->
+  <circle cx="64" cy="64" r="10" fill="#e9bd63" stroke="#0b6e56" stroke-width="3" />
+  <!-- 三颗电子（各在一条轨道的远端，均匀分布 0/60/120°） -->
+  <g fill="#e9bd63" stroke="#0b6e56" stroke-width="2.5">
+    <circle cx="109" cy="64" r="5.5" />
+    <circle cx="109" cy="64" r="5.5" transform="rotate(60 64 64)" />
+    <circle cx="109" cy="64" r="5.5" transform="rotate(120 64 64)" />
+  </g>
+</svg>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; background: transparent; overflow: hidden; }
+  /* 全屏透明舞台：无文字、无背景，只有原子（核 + 三条轨道 + 三颗电子）。
+     电子用 CSS offset-path 沿椭圆轨道绕核运动，轨道与核保持静止（不整体旋转）。
+     透明窗口内容会被窗口边界裁剪，收尾的放大扩散动画必须发生在与主窗等大的窗口内 */
+  .stage { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .zoomwrap { width: 128px; height: 128px;
+    transition: transform 0.5s cubic-bezier(0.3, 0.6, 0.4, 1), opacity 0.5s ease; }
+  .zoomwrap.out { transform: scale(9); opacity: 0; }
+  .atom { width: 100%; height: 100%; position: relative; background: transparent;
+    filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.35)); }
+  .atom svg { display: block; width: 100%; height: 100%; }
+  /* 电子：包裹层按轨道倾角旋转（0/60/120°），内部电子沿基准椭圆 path 匀速绕行 */
+  .eorbit { position: absolute; inset: 0; }
+  .eorbit.r60 { transform: rotate(60deg); }
+  .eorbit.r120 { transform: rotate(120deg); }
+  .electron { position: absolute; left: 0; top: 0; width: 12px; height: 12px; margin: -6px 0 0 -6px;
+    border-radius: 50%; background: #e9bd63; border: 2.5px solid #0b6e56;
+    offset-path: path("M 19 64 a 45 17 0 1 0 90 0 a 45 17 0 1 0 -90 0");
+    animation: dh-orbit 3.2s linear infinite; }
+  /* 三颗电子速度/相位错开，避免同步公转的呆板感 */
+  .e2 { animation-duration: 4.1s; animation-delay: -1.3s; }
+  .e3 { animation-duration: 5s; animation-delay: -2.7s; }
+  @keyframes dh-orbit { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="zoomwrap" id="zw">
+      <!-- 软件图标的动画形态：无背景原子（轨道/核静止，电子绕核运动）。
+           图标本体（任务栏/窗口/空状态）仍用 icons/icon.svg 的绿底原子 -->
+      <div class="atom" id="atom">
+        <svg viewBox="0 0 128 128" aria-hidden="true">
+          <g fill="none" stroke="#12a97f" stroke-width="4">
+            <ellipse cx="64" cy="64" rx="45" ry="17" />
+            <ellipse cx="64" cy="64" rx="45" ry="17" transform="rotate(60 64 64)" />
+            <ellipse cx="64" cy="64" rx="45" ry="17" transform="rotate(120 64 64)" />
+          </g>
+          <circle cx="64" cy="64" r="9" fill="#e9bd63" stroke="#0b6e56" stroke-width="2.5" />
+        </svg>
+        <div class="eorbit"><i class="electron e1"></i></div>
+        <div class="eorbit r60"><i class="electron e2"></i></div>
+        <div class="eorbit r120"><i class="electron e3"></i></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // 主进程在主窗口就绪后调用：原子放大淡出（穿过原子“进入”主窗），主进程随后销毁本窗口
+    window.dhSplashClose = function () {
+      document.getElementById('zw').classList.add('out');
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+html, body, #root { height: 100%; margin: 0; }
+.ant-app { height: 100%; }
+body { font-family: -apple-system, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', sans-serif; }
+
+.app-shell { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+.app-main { display: flex; flex: 1; min-height: 0; }
+
+/* ---- 侧栏 ---- */
+.sidebar {
+  width: 280px; min-width: 280px;
+  border-right: 1px solid #e5e7eb;
+  background: #fafbfc;
+  display: flex; flex-direction: column;
+}
+.sidebar-head {
+  padding: 8px; display: flex; align-items: center; gap: 6px;
+  border-bottom: 1px solid #eceef1;
+  font-weight: 600; font-size: 13px; color: #1f6f54;
+}
+.sidebar-head .ant-space { margin-left: auto; }
+.sidebar-search { padding: 6px 8px; border-bottom: 1px solid #f0f1f3; }
+.tree-wrap { flex: 1; overflow: auto; padding: 4px 6px; user-select: none; -webkit-user-select: none; }
+/* 细滚动条：减小水平滚动条对底部行的遮挡（覆盖式滚动条未生效时的兜底） */
+.tree-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
+.tree-wrap::-webkit-scrollbar-thumb { background: rgba(120, 130, 140, 0.45); border-radius: 4px; }
+.tree-wrap::-webkit-scrollbar-thumb:hover { background: rgba(120, 130, 140, 0.7); }
+.tree-wrap::-webkit-scrollbar-track { background: transparent; }
+/* 树节点：整行垂直居中；行宽收缩到内容（min-width 兜底整行高亮），长名单行不截断，容器出横向滚动条 */
+.tree-wrap .ant-tree-treenode { width: max-content; min-width: 100%; align-items: center; }
+.tree-wrap .ant-tree-node-content-wrapper { display: flex; align-items: center; }
+.tree-wrap .ant-tree-iconEle { display: flex; align-items: center; flex: none; }
+.node-title { padding: 0 4px; line-height: 24px; white-space: nowrap; flex: none; }
+.node-title .dot, .node-title .cloud-tag { flex: none; }
+.node-title.on { color: #0e8a6a; font-weight: 600; }
+.node-title .node-dt { margin-left: 6px; color: #9aa1ab; font-size: 11px; font-family: Consolas, monospace; }
+.col-ic-pk { color: #d4a017; }
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #16a34a; margin-left: 6px; }
+.cloud-tag { margin-left: 6px; font-size: 11px; color: #0e8a6a; opacity: 0.85; }
+.tree-hint { color: #999; font-size: 12px; padding: 14px; text-align: center; }
+/* 自渲染右键菜单（不经 Dropdown）：浮层观感对齐 antd Dropdown；高于视口时内部滚动（配合 FloatMenu 的钳制） */
+.ctx-menu { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14); border-radius: 4px; overflow: hidden; border: 1px solid rgba(5, 5, 5, 0.06); background: var(--ant-color-bg-container, #fff); max-height: calc(100vh - 16px); overflow-y: auto; }
+.ctx-menu .ant-menu { border-inline-end: none; min-width: 200px; }
+
+/* ---- 主区 ---- */
+.main-area { flex: 1; display: flex; flex-direction: column; min-width: 0; background: #fff; }
+.main-tabs { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 6px; }
+.main-tabs > .ant-tabs-nav { margin: 6px 0 0; flex: none; }
+/* 用后代选择器贯穿 antd Tabs 任意内层，保证 flex 链不断 */
+.main-tabs .ant-tabs-content-holder,
+.main-tabs .ant-tabs-content,
+.main-tabs .ant-tabs-tabpane { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+/* 非激活面板必须隐藏（覆盖上面的 display:flex，否则多标签内容叠加） */
+.main-tabs .ant-tabs-tabpane.ant-tabs-tabpane-hidden { display: none; }
+
+/* 可关闭页签（editable-card）紧凑化，贴近 Navicat 观感 */
+.main-tabs.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab {
+  margin: 0 2px 0 0 !important;
+  padding: 2px 4px 2px 10px !important;
+  background: #eef0f2;
+  border: 1px solid #dfe3e7;
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+  font-size: 12px;
+  transition: none;
+}
+.main-tabs.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab.ant-tabs-tab-active {
+  background: #fff;
+  border-color: #d5dade;
+}
+.main-tabs.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab .ant-tabs-tab-btn { color: #3d434b; }
+.main-tabs.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab .ant-tabs-tab-remove { margin-left: 2px; margin-right: 0; font-size: 10px; }
+.dark .main-tabs.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab { background: #202020; border-color: #2a2f36; }
+.dark .main-tabs.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab.ant-tabs-tab-active { background: #141414; }
+
+.tab-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.tab-toolbar { padding: 6px 4px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid #f0f1f3; }
+.toolbar-spacer { flex: 1; }
+.tab-toolbar .ctx { color: #888; font-size: 12px; margin-left: 8px; }
+
+.empty-pane { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #8a929c; }
+.empty-logo { line-height: 1; } /* 内部是 AppIcon 帆船 svg（与软件图标同款） */
+.empty-hint { font-size: 12px; }
+
+/* ---- 顶部工具栏（Navicat 式快捷入口）---- */
+.top-toolbar {
+  display: flex; align-items: center; gap: 2px; flex-wrap: wrap;
+  padding: 3px 8px; border-bottom: 1px solid #e5e7eb; background: #fafbfc;
+  min-height: 34px;
+}
+.top-toolbar .tb-btn { color: #444d57; font-size: 12px; }
+.top-toolbar .tb-btn .anticon { font-size: 14px; color: #0e8a6a; }
+.top-toolbar .tb-btn:disabled .anticon { color: inherit; }
+.tb-sep { width: 1px; height: 18px; margin: 0 6px; background: #e2e5e9; }
+
+/* ---- 查询页 连接/库 下拉 ---- */
+.tab-toolbar .q-target { display: flex; align-items: center; gap: 6px; margin-left: 10px; }
+.q-conn-select { min-width: 150px; max-width: 240px; }
+.q-db-select { min-width: 130px; max-width: 220px; }
+.q-server { color: #999; white-space: nowrap; }
+
+/* ---- 状态栏 ---- */
+.statusbar {
+  height: 26px; display: flex; justify-content: space-between; align-items: center;
+  padding: 0 12px; border-top: 1px solid #e5e7eb; background: #f5f6f7;
+  font-size: 12px; color: #5b6470; white-space: nowrap; overflow: hidden;
+}
+
+/* ---- 数据网格 ---- */
+.grid-area { flex: 1; min-height: 0; overflow: hidden; padding: 0 4px; }
+/* 单元格网格线（virtual 表行是 div，单元格统一用 .ant-table-cell） */
+.dh-grid .ant-table-cell { border-right: 1px solid #eceef1; border-bottom: 1px solid #eceef1; }
+.dh-grid .ant-table-thead .ant-table-cell { border-bottom: 1px solid #dfe3e7; }
+.dh-grid .ant-table-cell:last-child { border-right: none; }
+.cell { min-height: 22px; line-height: 22px; cursor: default; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cell.null { color: #9aa1ab; font-style: italic; }
+.cell.dirty { background: #fffbe6; box-shadow: inset 0 0 0 1px #f0d264; }
+.col-type { color: #9aa1ab; font-size: 11px; margin-left: 6px; font-weight: 400; }
+.row-deleted > td, .row-deleted > .ant-table-cell { background: #fff1f0 !important; color: #b0b0b0; text-decoration: line-through; }
+.row-edited > td, .row-edited > .ant-table-cell { background: #fffdf0; }
+.row-added > td, .row-added > .ant-table-cell { background: #eff8ff; }
+.grid-pager { display: flex; align-items: center; gap: 10px; padding: 4px 6px; border-top: 1px solid #f0f1f3; font-size: 12px; }
+
+/* ---- 可视化筛选/排序面板 ---- */
+.filter-panel { width: 480px; max-width: 70vw; }
+.filter-head { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #555; margin-bottom: 6px; }
+.filter-cond { display: flex; gap: 4px; margin-bottom: 4px; align-items: center; }
+.filter-sql {
+  margin-top: 10px; font-size: 11px; font-family: Consolas, monospace; color: #0e8a6a;
+  background: #f4f8f6; padding: 4px 6px; border-radius: 3px; white-space: pre-wrap; word-break: break-all;
+}
+.filter-foot { display: flex; gap: 6px; margin-top: 8px; align-items: center; }
+
+/* 单元格编辑框：明显边框 + 等宽字体 */
+.cell-edit-input { border-radius: 0; box-shadow: inset 0 0 0 2px #0e8a6a; font-family: Consolas, monospace; }
+
+/* ---- 查询 ---- */
+/* uiw 的包装 div 无高度，.cm-editor 的 height:100% 会塌成单行高（26px）：用 flex 链层层撑满 */
+.query-editor-wrap { height: 42%; min-height: 130px; border-bottom: 1px solid #e5e7eb; overflow: hidden; display: flex; flex-direction: column; }
+.query-editor-wrap > div { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.query-editor-wrap .cm-editor { flex: 1; min-height: 0; }
+/* 末行留出横向滚动条高度，避免被滚动条盖住（自定义滚动条为常显经典式后此项只是保险） */
+.query-editor-wrap .cm-content { padding-bottom: 14px; }
+/* CodeMirror 滚动条：自定义样式后 Chromium 用经典常显滚动条（不再随系统设置自动隐藏），横向始终占位可拖。
+   设计器（design-tabs 内全部表格/容器，含外键/索引/唯一键表、字段表、页签本身）统一同一套样式，
+   悬浮滚动条不再盖住表格末行输入框与底部属性面板。注：antd 横向-only 滚动容器是 .ant-table-content，
+   设了 y 的才是 .ant-table-body；::-webkit-scrollbar 与 :is() 组合在 Chromium 匹配不可靠，用后代通配 */
+.query-editor-wrap .cm-scroller { overflow-x: scroll; overflow-y: scroll; scrollbar-gutter: stable; }
+/* !important：antd cssinjs 的 hash 类选择器（.css-xxx.ant-table-scroll-horizontal>...）特异性 0-3-0+，
+   常规写法压不过，运行时注入顺序也在后。
+   scrollbar-color: auto：antd 给表格滚动容器设了标准 scrollbar-color，Chromium 一旦有该标准属性，
+   ::-webkit-scrollbar 自定义全部失效（回到 overlay 悬浮滚动条，遮挡末行输入框）——必须撤回 auto，
+   11px 伪元素规则才能接管。横向 overflow-x: scroll：经典常显占位（无溢出也保留轨道，不悬浮遮内容）；
+   纵向保持 auto——强加 scroll 会让右侧常显竖轨占宽，把窄视图下的操作列挤出可视区（round10 教训） */
+:is(.design-table, .obj-table) :is(.ant-table-body, .ant-table-content) {
+  scrollbar-color: auto !important;
+  scrollbar-width: auto !important;
+  overflow-x: scroll !important;
+  overflow-y: auto !important;
+  scrollbar-gutter: stable !important;
+}
+.design-tabs .ant-tabs-tabpane { overflow-x: scroll; overflow-y: auto; scrollbar-gutter: stable; }
+.cm-scroller::-webkit-scrollbar,
+.design-tabs ::-webkit-scrollbar { width: 11px; height: 11px; }
+.cm-scroller::-webkit-scrollbar-track,
+.design-tabs ::-webkit-scrollbar-track { background: transparent; }
+.cm-scroller::-webkit-scrollbar-thumb,
+.design-tabs ::-webkit-scrollbar-thumb {
+  background-color: #c3cbd4; border-radius: 6px; border: 2px solid transparent; background-clip: content-box;
+  min-width: 28px; min-height: 28px;
+}
+.cm-scroller::-webkit-scrollbar-thumb:hover,
+.design-tabs ::-webkit-scrollbar-thumb:hover { background-color: #98a4b0; }
+.cm-scroller::-webkit-scrollbar-thumb:active,
+.design-tabs ::-webkit-scrollbar-thumb:active { background-color: #7d8a96; }
+.cm-scroller::-webkit-scrollbar-corner,
+.design-tabs ::-webkit-scrollbar-corner { background: transparent; }
+.dark .cm-scroller::-webkit-scrollbar-thumb,
+.dark .design-tabs ::-webkit-scrollbar-thumb { background-color: #39414b; }
+.dark .cm-scroller::-webkit-scrollbar-thumb:hover,
+.dark .design-tabs ::-webkit-scrollbar-thumb:hover { background-color: #4a545f; }
+.dark .cm-scroller::-webkit-scrollbar-thumb:active,
+.dark .design-tabs ::-webkit-scrollbar-thumb:active { background-color: #59646f; }
+/* 补全提示弹层（CM6 .cm-tooltip-autocomplete > ul，max-height 10em 可滚）：默认走系统悬浮条，
+   与查询页观感割裂且遮末项。弹层挂在 .cm-editor 内，套用与 .cm-scroller 完全同一套
+   11px 经典常显滚动条（含 .dark 后代变体） */
+.cm-tooltip-autocomplete > ul::-webkit-scrollbar { width: 11px; height: 11px; }
+.cm-tooltip-autocomplete > ul::-webkit-scrollbar-track { background: transparent; }
+.cm-tooltip-autocomplete > ul::-webkit-scrollbar-thumb {
+  background-color: #c3cbd4; border-radius: 6px; border: 2px solid transparent; background-clip: content-box;
+  min-width: 28px; min-height: 28px;
+}
+.cm-tooltip-autocomplete > ul::-webkit-scrollbar-thumb:hover { background-color: #98a4b0; }
+.cm-tooltip-autocomplete > ul::-webkit-scrollbar-thumb:active { background-color: #7d8a96; }
+.cm-tooltip-autocomplete > ul::-webkit-scrollbar-corner { background: transparent; }
+.dark .cm-tooltip-autocomplete > ul::-webkit-scrollbar-thumb { background-color: #39414b; }
+.dark .cm-tooltip-autocomplete > ul::-webkit-scrollbar-thumb:hover { background-color: #4a545f; }
+.dark .cm-tooltip-autocomplete > ul::-webkit-scrollbar-thumb:active { background-color: #59646f; }
+/* v0927.42 深色查询编辑器适配：.dark 挂在 .app-shell（body 的后代），此前编辑器用
+   document.body.closest('.dark') 判定恒为 false → 深色下仍是白底编辑器、弹层白底白字。
+   现由 App 把 dark 状态直传 QueryTab/ObjEditTab → SqlEditor 套 oneDark（#282c34 底/象牙字，
+   补全弹层 .cm-tooltip 随之 #353a42 深底）；此处补齐编辑区分隔线与占位符的深色细节 */
+.dark .query-editor-wrap { border-bottom-color: #2a2f36; }
+.dark .cm-placeholder { color: #5c6370; }
+/* 数据页/结果网格（.dh-grid，antd virtual 表）：原生滚动容器被 rc-virtual-list 设 overflow:hidden，
+   滚动条是组件自绘的模拟条（.ant-table-tbody-virtual-scrollbar / -thumb，内联 8px + hover 显隐，
+   thumb 底色读 --rc-virtual-list-scrollbar-bg，antd 又在 .ant-table-wrapper 上把它设回自己的灰）。
+   统一为查询页观感：直接对自绘元素 !important 覆盖内联（visibility 常显 / 11px / 圆角浅灰 thumb）。
+   只改横向条高度与纵向条宽度——拖拽比例按另一轴 rect 计算，尺寸不受影响 */
+.dh-grid .ant-table-tbody-virtual-scrollbar { visibility: visible !important; }
+.dh-grid .ant-table-tbody-virtual-scrollbar-horizontal { height: 11px !important; }
+.dh-grid .ant-table-tbody-virtual-scrollbar-vertical { width: 11px !important; }
+.dh-grid .ant-table-tbody-virtual-scrollbar-thumb {
+  background: #c3cbd4 !important;
+  border-radius: 6px !important;
+}
+.dark .dh-grid .ant-table-tbody-virtual-scrollbar-thumb { background: #39414b !important; }
+.query-results { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.msg-pane { flex: 1; overflow: auto; padding: 6px 10px; font-size: 12px; font-family: Consolas, monospace; }
+.msg-pane .msg { padding: 2px 0; color: #4b5563; white-space: pre-wrap; word-break: break-all; }
+.msg-pane .msg.err { color: #dc2626; }
+
+/* ---- 执行计划树（解释结果双视图）---- */
+.plan-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.plan-bar { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 4px 10px; border-bottom: 1px solid #e5e7eb; background: #fafbfc; }
+.plan-bar-title { font-size: 12px; color: #6b7280; }
+.plan-tree { flex: 1; min-height: 0; overflow: auto; padding: 6px 8px; font-family: Consolas, monospace; font-size: 12px; }
+.plan-node-head { display: flex; align-items: center; gap: 6px; padding: 3px 6px; border-radius: 4px; white-space: nowrap; }
+.plan-node-head.branch { cursor: pointer; }
+.plan-node-head.branch:hover { background: #eef1f4; }
+.plan-toggle { width: 14px; flex: none; text-align: center; color: #9ca3af; }
+.plan-node-head.branch .plan-toggle { color: #0e8a6a; font-weight: bold; }
+.plan-op { flex: none; max-width: 46%; overflow: hidden; text-overflow: ellipsis; color: #0b5fa5; font-weight: 600; }
+.plan-detail { overflow: hidden; text-overflow: ellipsis; color: #4b5563; }
+.plan-kids { flex: none; margin-left: auto; color: #9ca3af; font-size: 11px; }
+.dark .plan-bar { background: #1b1f26; border-bottom-color: #2a3038; }
+.dark .plan-bar-title { color: #8b949e; }
+.dark .plan-node-head.branch:hover { background: #232a33; }
+.dark .plan-op { color: #5fb0f5; }
+.dark .plan-detail { color: #9aa4af; }
+.dark .plan-node-head.branch .plan-toggle { color: #34d399; }
+
+.cm-editor { height: 100%; font-size: 13px; }
+.cm-editor .cm-scroller { font-family: Consolas, 'Courier New', monospace; }
+
+/* ---- 设计器 ---- */
+.design-table .ant-table-cell { padding: 3px 6px !important; }
+.design-table input, .design-table .ant-select, .design-table .ant-checkbox-wrapper { font-size: 12px; }
+/* 设计器行拖拽排序 */
+.design-table .drag-handle { cursor: grab; color: #b3bac2; padding: 2px; }
+.design-table .drag-handle:hover { color: #0e8a6a; }
+.design-table .drag-handle:active { cursor: grabbing; }
+.design-table tr.row-dragging { opacity: 0.4; }
+.design-table tr.drop-above > td { border-top: 2px solid #0e8a6a !important; }
+.design-table tr.drop-below > td { border-bottom: 2px solid #0e8a6a !important; }
+.dark .design-table .drag-handle { color: #5b6470; }
+.dark .design-table .drag-handle:hover { color: #34d399; }
+.dark .design-table tr.drop-above > td { border-top-color: #34d399 !important; }
+.dark .design-table tr.drop-below > td { border-bottom-color: #34d399 !important; }
+
+/* 结构明细行「编辑」定位：设计器对应分区高亮该行 */
+.design-tabs tr.row-focus > td { background: #fff1b8 !important; box-shadow: inset 2px 0 0 #d4b106; }
+.dark .design-tabs tr.row-focus > td { background: #3a3305 !important; box-shadow: inset 2px 0 0 #fadb14; }
+
+/* ---- SQL 预览 ---- */
+.sql-preview { max-height: 380px; overflow: auto; background: #0e1420; color: #d7e0ea; padding: 10px 12px; border-radius: 4px; font-family: Consolas, monospace; font-size: 12px; white-space: pre-wrap; }
+
+/* ---- 表设计器：多页签 + 对象编辑 ---- */
+.design-tabs { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.design-tabs > .ant-tabs-nav { margin: 0; flex: none; }
+.design-tabs > .ant-tabs-content-holder { flex: 1; min-height: 0; overflow: hidden; }
+.design-tabs .ant-tabs-tabpane { height: 100%; /* 滚动行为与样式见「查询」段的统一滚动条规则（常显占位） */ }
+.design-tabs .ant-tabs-tabpane .grid-area { height: 100%; }
+.design-tabs .obj-tab { padding: 10px 12px; }
+.design-tabs .obj-toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.design-tabs .opt-row { display: flex; align-items: center; margin-bottom: 10px; }
+.design-tabs .obj-table input, .design-tabs .obj-table .ant-select { font-size: 12px; }
+
+/* ---- 数据传输向导 ---- */
+.dh-tr-list { max-height: 200px; overflow: auto; border: 1px solid #eee; border-radius: 4px; padding: 4px 0; }
+.dh-tr-row { padding: 1px 10px; }
+.dh-tr-row:hover { background: #f5f5f5; }
+.dark .dh-tr-list { border-color: #2a2f36; }
+.dark .dh-tr-row:hover { background: #20252c; }
+.dark .dh-tr-logs { background: #10151c !important; border-color: #2a2f36 !important; }
+
+/* ---- 视图设计器 ---- */
+.dh-vd-tabs .dh-vd-wrap { display: flex; gap: 10px; height: calc(100vh - 210px); min-height: 320px; }
+.dh-vd-side { width: 218px; flex: none; display: flex; flex-direction: column; border: 1px solid #eee; border-radius: 4px; }
+.dh-vd-side-hd { padding: 5px 10px; font-weight: 600; border-bottom: 1px solid #eee; }
+.dh-vd-side-list { flex: 1; overflow: auto; padding: 2px 0; }
+.dh-vd-side-row { display: flex; align-items: center; justify-content: space-between; padding: 1px 10px; }
+.dh-vd-side-row .nm { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dh-vd-side-row .ok { flex: none; margin-left: 8px; color: #999; font-size: 12px; white-space: nowrap; }
+.dh-vd-side-row .ant-btn { flex: none; }
+.dh-vd-side-row:hover { background: #f5f5f5; }
+.dh-vd-main { flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 10px; }
+.dh-vd-cards { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; }
+.dh-vd-card { border: 1px solid #d9d9d9; border-radius: 4px; min-width: 190px; max-width: 340px; }
+.dh-vd-card-hd { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-bottom: 1px solid #eee; background: rgba(127, 127, 127, 0.06); }
+.dh-vd-card-hd > b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dh-vd-card-hd .alias { color: #999; font-size: 12px; margin-right: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dh-vd-card-hd .ant-checkbox-wrapper { flex: none; white-space: nowrap; }
+.dh-vd-card-hd .ant-btn { flex: none; }
+.dh-vd-card-cols { padding: 4px 8px; display: flex; flex-direction: column; max-height: 190px; overflow: auto; }
+.dh-vd-card-cols > * { flex: none; }
+.dh-vd-joins { border-top: 1px dashed #d9d9d9; padding-top: 6px; }
+.dh-vd-sec-hd { font-weight: 600; margin-bottom: 4px; }
+.dh-vd-join { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.dh-vd-join .ant-input { flex: 1; font-family: Consolas, monospace; }
+.dh-vd-join-form { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.dh-vd-join-form .eq { color: #999; }
+.dh-vd-cond { display: flex; align-items: center; gap: 8px; border-top: 1px dashed #d9d9d9; padding-top: 8px; }
+.dh-vd-cond .lbl { color: #666; }
+.dh-vd-cond .ant-input { flex: 1; font-family: Consolas, monospace; }
+.dh-vd-sqlpane { height: calc(100vh - 210px); overflow: auto; }
+.dh-vd-sql { font-family: Consolas, monospace; font-size: 12px; white-space: pre-wrap; padding: 10px; margin: 0; border: 1px solid #eee; border-radius: 4px; }
+.dark .dh-vd-side, .dark .dh-vd-card, .dark .dh-vd-sql { border-color: #2a2f36; }
+.dark .dh-vd-side-hd, .dark .dh-vd-card-hd { border-bottom-color: #2a2f36; }
+.dark .dh-vd-side-row:hover { background: #20252c; }
+.dark .dh-vd-joins, .dark .dh-vd-cond { border-top-color: #2a2f36; }
+
+.design-tabs .sql-tab .sql-preview { max-height: calc(100vh - 260px); }
+/* 对象页签底部的行属性面板（索引栏位排序 / 外键启用等） */
+.design-tabs .bar-panel { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; padding: 8px 10px; border: 1px dashed var(--dh-border, #d9d9d9); border-radius: 4px; background: rgba(127, 127, 127, 0.04); }
+.design-tabs .bar-panel.hint { color: #999; font-size: 12px; }
+.design-tabs .bar-panel .bar-title { font-weight: 600; font-size: 12px; margin-right: 4px; }
+.design-tabs .bar-panel .dir-item { display: inline-flex; align-items: center; gap: 6px; }
+.design-tabs .bar-panel .dir-item code { font-size: 12px; background: rgba(127, 127, 127, 0.12); padding: 1px 6px; border-radius: 3px; }
+.dark .design-tabs .bar-panel { border-color: #2a2f36; background: rgba(255, 255, 255, 0.03); }
+
+/* ---- 标签页未保存绿点 ---- */
+.main-tabs .ant-tabs-tab .tab-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #52c41a; margin-left: 6px; vertical-align: 1px; }
+.dark .main-tabs .ant-tabs-tab .tab-dot { box-shadow: 0 0 3px rgba(82, 196, 26, 0.9); }
+/* 固定页签的图钉标记：斜置 45°，品牌绿 */
+.main-tabs .ant-tabs-tab .tab-pin { color: #0e8a6a; font-size: 11px; margin-right: 4px; transform: rotate(45deg); vertical-align: -1px; }
+.dark .main-tabs .ant-tabs-tab .tab-pin { color: #35c29a; }
+
+/* ---- 树行收紧：折叠箭头紧贴图标（antd 默认 箭头→图标 累计 12px+ 空档；cssinjs 运行时注入在后，需抬高选择器层级）---- */
+.tree-wrap .ant-tree .ant-tree-switcher { width: 16px; margin-inline-end: 0; }
+.tree-wrap .ant-tree .ant-tree-node-content-wrapper { padding-inline-start: 2px; }
+.tree-wrap .ant-tree .ant-tree-iconEle { width: 14px; margin-inline-end: 4px; display: inline-flex; align-items: center; justify-content: center; }
+/* 图标与行文字垂直居中：行容器改 center（原 flex-start 会把基线对齐的 svg 顶上去） */
+.tree-wrap .ant-tree .ant-tree-treenode { align-items: center; }
+.tree-wrap .ant-tree .ant-tree-iconEle .dh-dbi { display: block; }
+
+/* v0927.43 收展按钮悬浮底板收进按钮内：antd 的悬浮底板画在 ::before 上且固定 24×24，
+   本应用开关列已窄化为 16px → 底板右溢 8px 压住行首图标（表/库图标）。
+   缩为 14×16 居中（左右各留 1px、上下各留 4px）；排除 leaf-line（其 ::before 是叶子缩进引导线）。
+   深色下 antd 浅色底板 rgba(0,0,0,.06) 几乎不可见 → 换暗色可见底板 */
+.tree-wrap .ant-tree .ant-tree-switcher:not(.ant-tree-switcher_leaf-line)::before { width: 14px; height: 16px; left: 1px; top: 4px; }
+.dark .tree-wrap .ant-tree .ant-tree-switcher:not(.ant-tree-switcher-noop):hover::before { background-color: rgba(255, 255, 255, 0.09); }
+
+/* ---- 数据库品牌图标（连接树 / 连接弹窗）---- */
+.dh-dbi { flex-shrink: 0; }
+.dh-dbi-mysql { color: #4479a1; } .dark .dh-dbi-mysql { color: #6ea3d8; }
+.dh-dbi-mariadb { color: #a35b29; } .dark .dh-dbi-mariadb { color: #d68b5b; }
+.dh-dbi-postgres { color: #4169e1; } .dark .dh-dbi-postgres { color: #7d9df0; }
+.dh-dbi-sqlite { color: #0f80cc; } .dark .dh-dbi-sqlite { color: #57a8e8; }
+.dh-dbi-mssql { color: #cc2927; } .dark .dh-dbi-mssql { color: #e8706e; }
+.dh-dbi-oracle { color: #c74634; } .dark .dh-dbi-oracle { color: #e8816e; }
+.dh-dbi-mongo { color: #47a248; } .dark .dh-dbi-mongo { color: #6fc271; }
+.dh-dbi-redis { color: #ff4438; } .dark .dh-dbi-redis { color: #ff7a70; }
+.dh-dbi-other { color: #888; } .dark .dh-dbi-other { color: #aaa; }
+/* 库/schema 节点的圆柱数据库图标（金色，Navicat 观感） */
+.dh-dbcyl { color: #d48806; } .dark .dh-dbcyl { color: #e2b45a; }
+.dh-dbopt { display: inline-flex; align-items: center; gap: 6px; }
+
+/* ---- 深色模式 ---- */
+.dark .sidebar { background: #171a1f; border-color: #2a2f36; }
+.dark .sidebar-head { border-color: #2a2f36; }
+.dark .statusbar { background: #171a1f; border-color: #2a2f36; }
+.dark .main-area { background: #141414; }
+.dark .tab-toolbar, .dark .grid-pager { border-color: #2a2f36; }
+.dark .top-toolbar { background: #171a1f; border-color: #2a2f36; }
+.dark .top-toolbar .tb-btn { color: #c3cad3; }
+.dark .tb-sep { background: #2a2f36; }
+.dark .dh-grid .ant-table-cell { border-color: #262b32; }
+.dark .dh-grid .ant-table-thead .ant-table-cell { border-bottom-color: #2a2f36; }
+.dark .filter-sql { background: #10151c; color: #5ad1a8; }
+.dark .cell-edit-input { background: #10151c !important; color: #e6ebf2 !important; }
+
+/* ---- ER 图 ---- */
+.er-canvas { flex: 1; min-height: 0; overflow: auto; position: relative; background: #f4f6f5;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px); background-size: 16px 16px; }
+.er-world { position: relative; }
+.er-edges { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.er-edge { stroke: #2e9e7a; stroke-width: 1.5; fill: none; }
+.er-dot { fill: #2e9e7a; }
+.er-table { position: absolute; background: #fff; border: 1px solid #c9d4ce; border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); font-size: 12px; user-select: none; cursor: grab; }
+.er-table:active { cursor: grabbing; }
+.er-th { height: 28px; line-height: 26px; padding: 0 8px; background: #35544b; color: #fff; font-weight: 600;
+  border-radius: 3px 3px 0 0; display: flex; justify-content: space-between; gap: 8px; }
+.er-th .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: Consolas, monospace; }
+.er-th .ct { font-weight: 400; font-size: 11px; opacity: 0.7; flex: none; }
+.er-row { height: 20px; line-height: 19px; padding: 0 8px; display: flex; justify-content: space-between; gap: 8px;
+  border-top: 1px solid #eef2f0; overflow: hidden; white-space: nowrap; }
+.er-row .cname { overflow: hidden; text-overflow: ellipsis; font-family: Consolas, monospace; }
+.er-row.pk .cname { color: #b8770a; font-weight: 600; }
+.er-row .kico { color: #d48806; margin-right: 3px; font-size: 10px; }
+.er-row .ctype { color: #999; font-size: 11px; flex: none; }
+.er-zoom { min-width: 44px; text-align: center; color: #666; font-size: 12px; cursor: pointer; user-select: none; }
+.er-pick-list { max-height: 260px; overflow: auto; display: flex; flex-direction: column; gap: 4px; margin: 8px 0; }
+.er-pick-list > * { flex: none; }
+
+/* ---- 对象列表页：表行展开的结构面板 ---- */
+.objs-detail { display: flex; flex-direction: column; gap: 8px; padding: 2px 4px 8px 4px; }
+.objs-dg { display: flex; flex-direction: column; gap: 2px; }
+.objs-dg-head { font-size: 12px; font-weight: 600; color: #55606c; display: flex; align-items: center; gap: 6px; }
+.objs-dg-count { font-weight: 400; color: #98a1ab; }
+.objs-dg-list { max-height: 150px; overflow: auto; display: flex; flex-direction: column; gap: 1px; padding-left: 10px; }
+.objs-dg-list > * { flex: none; }
+.objs-dg-item { font-family: Consolas, monospace; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.objs-dg-empty { color: #9aa1ab; font-size: 12px; padding-left: 10px; }
+.dark .objs-dg-head { color: #a8b2bd; }
+.dark .objs-dg-empty { color: #6b7480; }
+.er-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, 0.55); z-index: 5; }
+.dark .er-canvas { background: #141414; background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px); }
+.dark .er-table { background: #1f1f1f; border-color: #3a3f46; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4); }
+.dark .er-row { border-top-color: #2a2f36; }
+.dark .er-row.pk .cname { color: #e2b45a; }
+.dark .er-zoom { color: #aaa; }
+.dark .er-loading { background: rgba(20, 20, 20, 0.55); }
+
+/* ---- 导入向导 ---- */
+.imp-file-row { display: flex; gap: 8px; }
+.imp-file-row .ant-input { flex: 1; }
+.imp-stat { margin: 10px 0 6px; font-size: 12px; color: #4b5563; }
+.imp-hint { margin-top: 8px; font-size: 12px; color: #8a94a0; }
+.imp-err { margin-top: 8px; color: #dc2626; font-size: 12px; }
+.imp-ok { margin-top: 8px; color: #0e8a6a; font-size: 12px; }
+.imp-preview { border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; }
+.imp-map .ant-table-cell { padding: 3px 8px !important; }
+.dark .imp-stat { color: #9aa4af; }
+.dark .imp-err { color: #f87171; }
+.dark .imp-ok { color: #34c3a2; }
+.dark .imp-preview { border-color: #333b44; }
+
+/* 结构同步（v0921.24）：SQL 预览/执行日志 暗色适配 */
+.dark [data-dh-sync="sql"] { background: #1b1f24 !important; border-color: #2a2f36; color: #d0d4da; }
+.dark [data-dh-sync="logs"] { background: #16181c !important; border-color: #2a2f36; color: #9aa4af; }
+
+/* 数据同步（v0921.25）：SQL 预览/执行日志 暗色适配 */
+.dark [data-dh-dsync="sql"] { background: #1b1f24 !important; border-color: #2a2f36; color: #d0d4da; }
+.dark [data-dh-dsync="logs"] { background: #16181c !important; border-color: #2a2f36; color: #9aa4af; }
+
+/* 运行 SQL 文件（v0921.26）：错误面板/执行日志 暗色适配 */
+.dark [data-dh-restore="result"] > div:last-child { background: #241a1c !important; border-color: #583236; }
+.dark [data-dh-restore="errline"] > div:first-child { color: #e5726f !important; }
+.dark [data-dh-restore="logs"] { background: #16181c !important; border-color: #2a2f36; color: #9aa4af; }
+
+/* v0927.44 补全设置面板：状态栏齿轮 + 片段清单/开关/编辑区 */
+.statusbar .sb-right { display: inline-flex; align-items: center; gap: 2px; }
+.statusbar .sb-acset { height: 20px; padding: 0 3px; color: #5b6470; }
+.statusbar .sb-acset:hover { color: #0e8a6a; }
+.acset-bar { display: flex; align-items: center; gap: 18px; padding: 2px 0 10px; border-bottom: 1px solid #eceef1; }
+.acset-tg { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
+.acset-bar-space { flex: 1; }
+.acset-list { max-height: 250px; overflow: auto; margin-top: 6px; }
+.acset-row { display: flex; align-items: center; gap: 10px; padding: 4px 6px; border-bottom: 1px solid #f2f3f5; }
+.acset-row:hover { background: #f7f9fa; }
+.acset-label { font-family: Consolas, 'Courier New', monospace; font-weight: 600; min-width: 46px; }
+.acset-src { margin: 0; flex-shrink: 0; }
+.acset-detail { flex: 1; color: #8a919b; font-size: 12px; font-family: Consolas, 'Courier New', monospace;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.acset-rowbtns { flex-shrink: 0; display: inline-flex; }
+.acset-rowbtns .ant-btn { padding: 0 4px; }
+.acset-empty { color: #999; text-align: center; padding: 18px 0; }
+.acset-edit { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #dfe3e7; }
+.acset-edit-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.acset-prefix { width: 180px; }
+.acset-tpl textarea { font-family: Consolas, 'Courier New', monospace; font-size: 12px; }
+.acset-hint { color: #999; font-size: 12px; margin-top: 6px; }
+.dark .acset-bar { border-color: #2a2f36; }
+.dark .acset-row { border-color: #262b31; }
+.dark .acset-row:hover { background: #20252b; }
+.dark .acset-detail { color: #7d8794; }
+.dark .acset-edit { border-color: #3a4048; }
+
+/* ---- v0927.50 查询耗时历史/慢查询标记：消息面板与历史弹窗的耗时配色（≥1s 橙、≥5s 红） ---- */
+.msg .dh-ms { font-weight: 600; }
+.msg .dh-ms-slow { color: #d46b08; }
+.msg .dh-ms-vslow { color: #cf1322; }
+.dark .msg .dh-ms-slow { color: #ffa940; }
+.dark .msg .dh-ms-vslow { color: #ff7875; }
+.dh-hist-ms { font-weight: 600; }
+.dh-hist-ms.dh-ms-slow { color: #d46b08; }
+.dh-hist-ms.dh-ms-vslow { color: #cf1322; }
+.dark .dh-hist-ms.dh-ms-slow { color: #ffa940; }
+.dark .dh-hist-ms.dh-ms-vslow { color: #ff7875; }
+.dh-hist-err { color: #cf1322; font-weight: 600; margin-right: 6px; }
+.dark .dh-hist-err { color: #ff7875; }
+.dh-hist-stats { color: #8a919b; font-size: 12px; }
+.dark .dh-hist-stats { color: #7d8794; }
+/* v0927.52 历史收藏星标（行首点击翻转，不触发行点击载入） */
+.dh-hist-fav { color: #b8c0cc; cursor: pointer; margin-right: 6px; user-select: none; }
+.dh-hist-fav:hover { color: #faad14; }
+.dh-hist-fav.on { color: #faad14; }
+/* v0927.52 设计器重建表的他表 FK 引用限制提示（仅提示不阻断） */
+.dh-fkwarn { margin: 6px 12px; padding: 6px 10px; border: 1px solid #f4b860; background: #fff7e6; color: #ad6800; border-radius: 4px; font-size: 12px; }
+.dark .dh-fkwarn { background: #2b2111; color: #f4b860; border-color: #614700; }
+
+/* ---- v0927.50 结果对比：固定基准 × 当前结果并排 diff（差异格橙底加粗、缺格灰斜体） ---- */
+.dh-cmp-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.dh-cmp-cap { font-weight: 600; margin-bottom: 4px; }
+.dh-cmp-stats { color: #8a919b; font-size: 12px; margin-left: auto; }
+.dh-cmp-wrap { display: flex; gap: 10px; align-items: flex-start; }
+.dh-cmp-side { flex: 1 1 0; min-width: 0; overflow: auto; }
+.dh-cmp-table { width: 100%; border-collapse: collapse; font-family: Consolas, 'Courier New', monospace; font-size: 12px; }
+.dh-cmp-table th, .dh-cmp-table td { border: 1px solid #e5e7eb; padding: 3px 6px; text-align: left; white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+.dh-cmp-table th { background: #fafbfc; font-weight: 600; }
+.dh-cmp-table td.dh-diff-cell { background: #fff7e6; color: #d46b08; font-weight: 700; }
+.dh-cmp-table td.dh-diff-miss, .dh-cmp-table th.dh-diff-miss { color: #c0c6cc; font-style: italic; }
+.dh-cmp-empty { color: #999; text-align: center; padding: 16px 0; }
+.dark .dh-cmp-stats { color: #7d8794; }
+.dark .dh-cmp-table th, .dark .dh-cmp-table td { border-color: #333a42; }
+.dark .dh-cmp-table th { background: #1f242a; }
+.dark .dh-cmp-table td.dh-diff-cell { background: #453109; color: #ffa940; }
+.dark .dh-cmp-table td.dh-diff-miss, .dark .dh-cmp-table th.dh-diff-miss { color: #5a626b; }
+.dark .dh-cmp-empty { color: #7d8794; }
+
+/* ---- v0927.50 SQL 历史跨连接聚合：行内连接名 chip（仅「全部连接」视图显示） ---- */
+.dh-hist-conn { display: inline-block; padding: 0 6px; margin-right: 8px; border: 1px solid #d9dee4; border-radius: 3px; color: #4a5568; background: #f5f7fa; font-size: 11px; line-height: 18px; vertical-align: 1px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dark .dh-hist-conn { border-color: #3a4048; color: #a8b3bf; background: #20252b; }
