@@ -12,6 +12,13 @@
   "asarUnpack": [
     "**/*.wasm"
   ],
+  "mac": {
+    "identity": null,
+    "category": "public.app-category.developer-tools",
+    "target": [
+      { "target": "dmg", "arch": ["x64", "arm64"] }
+    ]
+  },
   "win": {
     "icon": "electron/icons/icon.png",
     "target": [
