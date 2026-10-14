@@ -1,12 +1,12 @@
 'use strict';
-// v0927.52 MSSQL 列拖拽排序（重建表法）验证：
+// v0927.53 MSSQL 列拖拽排序（重建表法）验证：
 //  D1 mssql 设计器：3 字段行 + 每行拖拽手柄（w55_reo：id/nm/qty）
 //  D2 合成拖拽（真实 mousedown 点亮 armed + 合成 dragstart/dragover/drop，同 round7）：
 //     id 行拖到 nm 之后 → 设计器顺序 nm,id,qty
 //  D3 SQL 预览：重建表语句（w55_reo__rebuild + CREATE TABLE + INSERT INTO + sp_rename + 索引复原 ix_w55_qty）
 //  D4 保存 → 执行重建 → 设计器重载（首列 nm）
 //  D5 fx-w55 check1：列顺序 nm,id,qty（sys.columns column_id）+ 3 行数据保留 + ix_w55_qty 存活 + 无 __rebuild 残留
-//  S0 版本 v0927.52 / S5 无控制台错误
+//  S0 版本 v0927.53 / S5 无控制台错误
 // 前置：套件自跑 fx-w55 stage1（幂等）；结尾 fx-w55 cleanup。运行于独立新实例（battery 保证无实例占用）。
 const { execFileSync } = require('child_process');
 const CDP = require('chrome-remote-interface');
@@ -56,8 +56,8 @@ const fx55 = (mode) => String(execFileSync('node', ['D:/DataHelm/scripts/fx/fx-w
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  if (!/v0927\.52/.test(sb)) fail('S0 状态栏 v0927.52', sb);
-  else pass('S0 状态栏 v0927.52');
+  if (!/v0927.53/.test(sb)) fail('S0 状态栏 v0927.53', sb);
+  else pass('S0 状态栏 v0927.53');
 
   // ---- 夹具 stage1（幂等）----
   try {

@@ -1,8 +1,8 @@
 'use strict';
-// v0927.52 修复「表」页打开 MSSQL 表报 Invalid object name（用户环境复刻）验证：
+// v0927.53 修复「表」页打开 MSSQL 表报 Invalid object name（用户环境复刻）验证：
 //  连接默认库=master、业务对象在独立库 dh_w56（dbo.w56_dbo_t + platform.arrival_notice_detail）。
 //  T1 树只展开不打开（conn 1 → dh_w56 → 表分类）→ 两表节点可见；工具栏上下文=分类（库+空 schema）
-//  T2 工具栏「表」→ 对象列表页（表·dh_w56）：v0927.52 起默认全部架构——dbo 表（w56_dbo_t）与非 dbo 表（platform.arrival_notice_detail）都在列
+//  T2 工具栏「表」→ 对象列表页（表·dh_w56）：v0927.53 起默认全部架构——dbo 表（w56_dbo_t）与非 dbo 表（platform.arrival_notice_detail）都在列
 //  T3 行「打开」w56_dbo_t（用户原始报错路径，修复前：Invalid object name 'dh_w56.w56_dbo_t'）
 //     → 数据页 2 行（丁/戊）、无 Invalid object name 报错
 //  T4 单元格编辑 + 保存更改（空 schema 的 changes() 路径）：丁 → 丁改，保存后重载可见
@@ -43,7 +43,7 @@ const fx56 = (mode) => String(execFileSync('node', ['D:/DataHelm/scripts/fx/fx-w
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  /v0927\.52/.test(sb) ? pass('S0 状态栏 v0927.52') : fail('S0 状态栏 v0927.52', sb);
+  /v0927.53/.test(sb) ? pass('S0 状态栏 v0927.53') : fail('S0 状态栏 v0927.53', sb);
 
   // ---- D0 夹具 stage1（幂等）----
   try {
@@ -88,7 +88,7 @@ const fx56 = (mode) => String(execFileSync('node', ['D:/DataHelm/scripts/fx/fx-w
       })()`);
     }
     objs && objs.ctx.indexOf('dh_w56') >= 0 && objs.names.includes('w56_dbo_t') && objs.names.includes('arrival_notice_detail') && objs.ctx.indexOf('全部架构') >= 0
-      ? pass('T2 对象列表页绑定 dh_w56（v0927.52 起默认全部架构：' + objs.names.length + ' 个表，dbo + 非 dbo 表都在列）')
+      ? pass('T2 对象列表页绑定 dh_w56（v0927.53 起默认全部架构：' + objs.names.length + ' 个表，dbo + 非 dbo 表都在列）')
       : fail('T2 对象列表页', JSON.stringify(objs).slice(0, 300));
   }
 

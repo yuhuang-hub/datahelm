@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 补全弹层滚动条统一：查询页提示弹框（CM6 .cm-tooltip-autocomplete > ul）滚动条
+// v0927.53 补全弹层滚动条统一：查询页提示弹框（CM6 .cm-tooltip-autocomplete > ul）滚动条
 // 与查询页编辑器同款 —— 11px 经典常显（占布局宽 offsetWidth-clientWidth=11，修复前悬浮条占 0）、
 // 圆角灰 thumb #c3cbd4 / hover #98a4b0 / active #7d8a96、暗色 #39414b 系（CSSOM 规则比对一致性）。
 // 注：Chromium 的 getComputedStyle(el,'::-webkit-scrollbar') 返回空，故宽度断言用布局占位、
@@ -44,7 +44,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  String(ver).includes('v0927.52') ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  String(ver).includes('v0927.53') ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // 编辑器整体替换输入（点击 → Ctrl+A → insertText，带落地校验重试）
   const setSql = async (text) => {

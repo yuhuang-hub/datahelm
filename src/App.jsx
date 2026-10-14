@@ -767,7 +767,7 @@ export default function App() {
           <span>
             {Object.keys(sessions).length}/{conns.length} 个连接
             {activeTab ? ` · ${connName(activeTab.connId)}${sessions[activeTab.connId] ? ' · ' + sessions[activeTab.connId].serverInfo : ''}` : ' · DataHelm'}
-            <span style={{ color: '#bbb', marginLeft: 8 }}>v0927.52</span>
+            <span style={{ color: '#bbb', marginLeft: 8 }}>v0927.53</span>
           </span>
           <span className="sb-right">
             <Button

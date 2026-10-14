@@ -59,7 +59,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  sb.includes('v0927.52') ? pass('S0 状态栏 v0927.52') : fail('S0 状态栏 v0927.52', sb);
+  sb.includes('v0927.53') ? pass('S0 状态栏 v0927.53') : fail('S0 状态栏 v0927.53', sb);
 
   // ---- 打开 sqlite → 表 → employees ----
   let p = await treePos('演示 SQLite 库');
@@ -160,7 +160,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     ? pass(`S2b 拖拽生效（${dragFirstBelowSecond.from} 拖到 ${dragFirstBelowSecond.to} 后：${order.join(', ')}）`)
     : fail('S2b 拖拽生效', `dropped=${dropped} 顺序=${order.join(',')} 预期 ${dragFirstBelowSecond.to},${dragFirstBelowSecond.from}`);
 
-  // v0927.52：预览只读——先切 SQL 预览页签读重建 SQL（不保存）；「保存」直接执行
+  // v0927.53：预览只读——先切 SQL 预览页签读重建 SQL（不保存）；「保存」直接执行
   const innerTab = await ev(`(() => { const t = [...document.querySelectorAll('.design-tabs .ant-tabs-tab')].find((x) => x.textContent.trim() === 'SQL 预览'); if (!t) return null; const r = t.getBoundingClientRect(); return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) }; })()`);
   if (!innerTab) {
     fail('S2c 前置', 'SQL 预览页签未找到');

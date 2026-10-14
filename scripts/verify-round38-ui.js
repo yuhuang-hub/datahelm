@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 恢复关闭的标签页 — UI 端到端验证（9227 新实例；无需夹具，employees 基线表即可）
+// v0927.53 恢复关闭的标签页 — UI 端到端验证（9227 新实例；无需夹具，employees 基线表即可）
 //  U0 备标签：连接右键「新建查询」×2 + 双击 employees 开数据页 → [查询1, 查询2, employees]
 //  T1 右键 查询1：菜单含 恢复关闭的标签页（清单精确）且空栈时禁用
 //  T2 单关 → 恢复：关 查询1 → [查询2, employees]；菜单 恢复关闭的标签页 → 追加到末尾 [查询2, employees, 查询1]，激活=查询1
@@ -89,7 +89,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   let ok = false;
   for (let i = 0; i < 40 && !ok; i += 1) { ok = await ev("!!document.querySelector('.top-toolbar .tb-btn')"); if (!ok) await sleep(500); }
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- U0 备标签 ----
   const connP = await waitTree('演示 SQLite 库', 0);

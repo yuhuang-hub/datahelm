@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 电池 v19（v0927.52 起生效；55 套件 = v18 阶段序 + round51-57）。
+# 电池 v19（v0927.53 起生效；56 套件 = v18 阶段序 + round51-58）。
 # 编排要点（重建时踩过的坑，勿再踩）：
 #  - 夹具文件全带 fx- 前缀；fx() 内部统一拼 scripts/fx/fx-<name>.js
 #  - fx-precfg-ui-cd 是 CDP 驱动活实例的夹具：必须先起实例再跑（fx() 对它跳过 kill_all）
@@ -128,6 +128,7 @@ fresh 9230 && run_suite r54 verify-round54.js 9230
 fresh 9230 && run_suite r55 verify-round55.js 9230
 fresh 9230 && run_suite r56 verify-round56.js 9230
 fresh 9230 && run_suite r57 verify-round57.js 9230
+fresh 9230 && run_suite r58 verify-round58.js 9230
 kill_all
 
 ELAPSED=$(( $(date +%s) - T0 ))

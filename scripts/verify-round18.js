@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 真实软件图标 + 主窗「就绪后才显示」（DH_SPLASH_MS=8000 实例，9228）：
+// v0927.53 真实软件图标 + 主窗「就绪后才显示」（DH_SPLASH_MS=8000 实例，9228）：
 //  I1 图标资源存在：electron/icons/icon.svg + icon.png（PNG 魔数、非平凡大小）
 //  T1 主窗首次可见的瞬间：__dhReadyConns ≥1（连接在显示前已加载）、树里连接行已提交 DOM
 //  T2 日志时序：SPLASH shown ≤ CONNS-READY ≤ MAIN shown；MAIN shown - shown ≥8000；
@@ -91,7 +91,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     const log = fs.readFileSync('D:/DataHelm/.tmp-ud7/ui-debug.log', 'utf8');
     const ts = (l) => Date.parse(l.slice(0, 24));
     const last = (kw) => log.split('\n').filter((l) => l.includes(kw)).pop();
-    const sh = last('DH-SPLASH shown v0927.52');
+    const sh = last('DH-SPLASH shown v0927.53');
     const cr = last('DH-CONNS-READY');
     const ms = last('DH-MAIN shown');
     const sc = last('DH-SPLASH closed');
@@ -128,7 +128,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 / S5 ----
   const ver = await ev(`document.querySelector('.statusbar').textContent`);
-  if (/v0927.52/.test(String(ver))) pass('S0 状态栏 v0927.52'); else fail('S0 状态栏 v0927.52', String(ver).slice(0, 100));
+  if (/v0927.53/.test(String(ver))) pass('S0 状态栏 v0927.53'); else fail('S0 状态栏 v0927.53', String(ver).slice(0, 100));
   await sleep(600);
   if (!errors.length) pass('S5 无控制台错误'); else fail('S5 无控制台错误', errors.slice(0, 3).join(' | '));
 

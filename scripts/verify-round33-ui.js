@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 结构明细行「编辑」定位 — UI 端到端验证（9227 测试实例；夹具已备：
+// v0927.53 结构明细行「编辑」定位 — UI 端到端验证（9227 测试实例；夹具已备：
 //   sqlite .tmp-ud7/demo-test.db w33_ui（w33_ix 索引 / w33_uq 唯一 / w33_tg 触发器）；
 //   mssql master.dbo w33_ref + w33_ui_m（ix/uq/fk/ck））
 //  U1 sqlite：索引明细行双击 → 设计页签打开 · 内部「索引」页签激活 · 该行高亮(row-focus)
@@ -94,7 +94,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   let ok = false;
   for (let i = 0; i < 40 && !ok; i += 1) { ok = await ev("!!document.querySelector('.top-toolbar .tb-btn')"); if (!ok) await sleep(500); }
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- 展开 sqlite：连接 → 表分类 → w33_ui ----
   if (!(await ensureOpen('演示 SQLite 库', 0))) { fail('U0', '找不到连接节点'); await client.close(); return; }

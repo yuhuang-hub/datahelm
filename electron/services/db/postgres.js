@@ -582,6 +582,15 @@ async function create(cfg, localPort) {
         [schema || 'public', table]
       )).rows.length;
       if (content === 'data' && isView) return `-- 视图 ${table} 无数据可导出`;
+      const cols = await s.columns({ schema, table });
+      // 自增列（serial/identity 的 DEFAULT 都指向一个序列）：序列必须先建——目标端执行 CREATE TABLE 时
+      // DEFAULT nextval(...) 里的 ::regclass 在解析期就要解析序列名，序列不存在直接报错；
+      // 数据导完再 setval 把序列对齐到已导入的最大 id，之后不写 id 的新增才能接着自增
+      const NEXTVAL = /nextval\('([^']+)'/i;
+      const seqs = isView ? [] : cols
+        .map((c) => ({ col: c.name, seq: (String(c.defaultValue || '').match(NEXTVAL) || [])[1] }))
+        .filter((x) => x.seq);
+      if (seqs.length && content !== 'data') parts.push(await s.dumpSequences(seqs, schema));
       if (content !== 'data') {
         if (isView) {
           parts.push(await s.objectDdl({ schema, kind: 'view', name: table }));
@@ -589,10 +598,10 @@ async function create(cfg, localPort) {
           parts.push(await s.ddl({ schema, table }));
         }
       }
-      const cols = await s.columns({ schema, table });
       const full = U.qualify(D, null, schema, table);
       const colList = cols.map((c) => U.q(D, c.name)).join(', ');
       const BATCH = 500;
+      let rowCount = 0;
       if (content !== 'structure') {
         for (let page = 1; ; page += 1) {
           const r = await s.page({ schema, table, pageNo: page, pageSize: BATCH });
@@ -600,10 +609,42 @@ async function create(cfg, localPort) {
           for (const row of r.rows) {
             parts.push(`INSERT INTO ${full} (${colList}) VALUES (${row.map((v) => U.lit(D, v)).join(', ')});`);
           }
+          rowCount += r.rows.length;
           if (r.rows.length < BATCH) break;
+        }
+        if (seqs.length && rowCount > 0) {
+          for (const x of seqs) {
+            parts.push(`SELECT setval('${x.seq.replace(/'/g, "''")}', GREATEST(COALESCE((SELECT MAX(${U.q(D, x.col)}) FROM ${full}), 1), 1));`);
+          }
         }
       }
       return parts.join('\n');
+    },
+
+    // 表内自增列引用的序列 → CREATE SEQUENCE（带源端参数，恢复后行为与源一致）。
+    // 数值参数取 pg_sequences 原文拼接：MAXVALUE 可达 2^63-1，超 JS 安全整数，Number() 会丢精度；
+    // 仅以 /^-?\d+$/ 校验防注入。identity 列导出后退化为 DEFAULT nextval（serial 等价形式）
+    async dumpSequences(seqs, schema) {
+      const fq = (n) => (/[."]/.test(n) ? n : `${schema || 'public'}.${n}`);
+      const r = await client.query(
+        `SELECT schemaname || '.' || sequencename AS fq, start_value, increment_by, min_value, max_value, cache_size, cycle
+         FROM pg_sequences WHERE (schemaname || '.' || sequencename) = ANY($1::text[])`,
+        [seqs.map((x) => fq(x.seq))]
+      );
+      const byFq = new Map(r.rows.map((row) => [row.fq, row]));
+      return seqs.map((x) => {
+        const p = byFq.get(fq(x.seq)) || {};
+        const num = (v) => (/^-?\d+$/.test(String(v == null ? '' : v)) ? String(v) : '');
+        const opts = [
+          num(p.increment_by) && `INCREMENT BY ${num(p.increment_by)}`,
+          num(p.min_value) && `MINVALUE ${num(p.min_value)}`,
+          num(p.max_value) && `MAXVALUE ${num(p.max_value)}`,
+          num(p.start_value) && `START WITH ${num(p.start_value)}`,
+          num(p.cache_size) && `CACHE ${num(p.cache_size)}`,
+          p.cycle == null ? '' : (p.cycle ? 'CYCLE' : 'NO CYCLE'),
+        ].filter(Boolean).join(' ');
+        return `CREATE SEQUENCE IF NOT EXISTS ${x.seq}${opts ? ' ' + opts : ''};`;
+      }).join('\n');
     },
 
     // ---- CSV 导入 / 批量插入（参数化） ----

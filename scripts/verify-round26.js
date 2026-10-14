@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 树表两级展开验证（9229 新实例，sqlite 演示库；夹具 scripts/fx/fx-w26：demo-test 重置 + dh_w26_t 15 列宽表 + dh_w26_rich 富结构表）：
+// v0927.53 树表两级展开验证（9229 新实例，sqlite 演示库；夹具 scripts/fx/fx-w26：demo-test 重置 + dh_w26_t 15 列宽表 + dh_w26_rich 富结构表）：
 //  T1 树表节点有展开箭头（非叶子）
 //  T1b 展开出六个结构分组（字段/索引/外键/唯一键/检查/触发器，按序）；T1c 展开「字段」→ 列名+类型+主键金钥匙图标
 //  T2 字段节点点选 → 工具栏上下文归到所属表（ER 图可用）
@@ -54,7 +54,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- T1 树表两级展开：sqlite → 表 → employees 有箭头 → 六分组 → 字段明细 ----
   // 可见树行按 DOM 序：{i, title, leaf}（leaf=无展开箭头）

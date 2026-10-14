@@ -1,7 +1,7 @@
 'use strict';
-// v0927.52 数据页多行复制 — UI 端到端验证（9227 测试实例；夹具已备：
+// v0927.53 数据页多行复制 — UI 端到端验证（9227 测试实例；夹具已备：
 //   sqlite .tmp-ud7/demo-test.db w41_cp（逗号/引号/换行/NULL 边界值）+ 视图 w41_cp_v；mssql master.dbo w41_cp_m）
-//  S0 状态栏版本 v0927.52
+//  S0 状态栏版本 v0927.53
 //  U0 打开 w41_cp：≥4 行 + 勾选列存在
 //  T1 无选中时「复制选中行」禁用
 //  T2 勾选 3 行 → 按钮启用 + 文案 (3)
@@ -104,7 +104,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   const ver = await ev("(function(){ const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 状态栏版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 状态栏版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- 打开 sqlite w41_cp 数据页 ----
   let ok = true;

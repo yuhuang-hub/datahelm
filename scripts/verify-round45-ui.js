@@ -1,9 +1,9 @@
 'use strict';
-// v0927.52 深色查询编辑器修复：主题按钮浅色态太阳图标（原为数据库图标）；
+// v0927.53 深色查询编辑器修复：主题按钮浅色态太阳图标（原为数据库图标）；
 // dark 由 App 直传 QueryTab/ObjEditTab → SqlEditor 套 oneDark（此前 document.body.closest('.dark')
 // 恒 null → 深色下编辑器仍白底、补全弹层白底白字不可读）。本套件用计算值锁定：
 // 浅色 编辑器 #fff/图标 anticon-sun；深色 编辑器 #282c34+象牙 #abb2bf、槽同底、占位符 #5c6370、
-// 分隔线 #2a2f36、弹层 #353a42 底（选中 #2c313a 象牙字、未选中白字）、弹层滚动条占位 11px（v0927.52 回归）、
+// 分隔线 #2a2f36、弹层 #353a42 底（选中 #2c313a 象牙字、未选中白字）、弹层滚动条占位 11px（v0927.53 回归）、
 // ObjEditTab（新建视图模板）同样深底；切回浅色还原白底 + 太阳图标。
 // S0 版本；U0 sqlite 新建查询；T9 前树展开走 switcher（会话已开时双击连接=断开会话并关页签）。
 const CDP = require('chrome-remote-interface');
@@ -55,7 +55,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  String(ver).includes('v0927.52') ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  String(ver).includes('v0927.53') ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- U0 打开 sqlite 新建查询（右键连接菜单，不动树展开态）----
   const connPos = await titlePos('演示 SQLite 库');
@@ -183,7 +183,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
             ? pass('T5 选中项 #2c313a+象牙字，未选中项白字（深底可读）')
             : fail('T5 选项配色', JSON.stringify({ s: pop.selBg, f: pop.selFg, n: pop.normFg }));
 
-          // ---- T6 弹层滚动条占位 11px == 编辑器（v0927.52 回归守卫）----
+          // ---- T6 弹层滚动条占位 11px == 编辑器（v0927.53 回归守卫）----
           const delta = pop.ow - pop.cw;
           const edDelta = pop.edOw - pop.edCw;
           pop.sh > pop.ch && delta === 11

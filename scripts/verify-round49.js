@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 SQL 格式化增强验证：
+// v0927.53 SQL 格式化增强验证：
 //  T1 CASE/WHEN/ELSE/END 块状缩进（SELECT 列表内，THEN 值同行）
 //  T2 嵌套 CASE：内层 CASE 相对缩进 4 空格、双层 END 各自回缩
 //  T3 函数内 CASE：sum(CASE … END) 不破坏括号配对
@@ -9,7 +9,7 @@
 //  T7 子查询上下文恢复：EXISTS 子查询闭合括号后的外层 AND 断行
 //  T8 压缩回环：format→minify→format 幂等；minify 保留 CASE/BETWEEN 词序
 //  T9 语义保持：美化后的 CASE 查询在 employees 上运行 4 行，band = 高/中/低/高
-//  S0 版本 v0927.52 / S5 无控制台错误
+//  S0 版本 v0927.53 / S5 无控制台错误
 const CDP = require('chrome-remote-interface');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 (async () => {
@@ -61,8 +61,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  if (!/v0927\.52/.test(sb)) fail('S0 状态栏 v0927.52', sb);
-  else pass('S0 状态栏 v0927.52');
+  if (!/v0927.53/.test(sb)) fail('S0 状态栏 v0927.53', sb);
+  else pass('S0 状态栏 v0927.53');
 
   // ---- 打开 sqlite → employees → 新建查询（可重入：employees 已可见则跳过展开双击）----
   let p = null;

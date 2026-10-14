@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 同步比较进度条验证（9230 新实例；夹具 scripts/fx/fx-w48 stage1：w48-src 61 表、前 30 张各 8000 行；w48-dst employees 王五漂移+30 同构（t001 一行 qty 差异）+extra）：
+// v0927.53 同步比较进度条验证（9230 新实例；夹具 scripts/fx/fx-w48 stage1：w48-src 61 表、前 30 张各 8000 行；w48-dst employees 王五漂移+30 同构（t001 一行 qty 差异）+extra）：
 //  T1 工具栏「结构同步」→ 页签
 //  T2 源/目标选 W48 两库
 //  T3 结构比较：完成态（success + 「比较完成 · 61 张表」）+ 逐表事件流 DH-SYNC-PROG 61 条（i=1..61 首尾表正确）
@@ -47,7 +47,7 @@ const LOG = 'D:/DataHelm/.tmp-ud7/ui-debug.log';
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- antd Select 选择（round27 同款：等旧下拉收起 → mousedown 打开 → 点选项 → 校验面板文本）----
   const openSelect = async (attr, panel, idx) => {

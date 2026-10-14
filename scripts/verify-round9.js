@@ -95,7 +95,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     return true;
   };
   const sqlPreviewText = () => dEv(`(() => { const p = document.querySelector('.sql-preview'); return p ? p.textContent : null; })()`);
-  // v0927.52：保存 = 直接执行 applyAlter（不再跳 SQL 预览）；完成信号 = 内层页签回到「字段」
+  // v0927.53：保存 = 直接执行 applyAlter（不再跳 SQL 预览）；完成信号 = 内层页签回到「字段」
   const saveAndExecute = async (label) => {
     if (!(await clickDesignBtn('保存'))) {
       fail(label, '找不到 保存 按钮');
@@ -146,7 +146,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  sb.includes('v0927.52') ? pass('S0 状态栏 v0927.52') : fail('S0 状态栏 v0927.52', sb);
+  sb.includes('v0927.53') ? pass('S0 状态栏 v0927.53') : fail('S0 状态栏 v0927.53', sb);
 
   // ---- 打开 sqlite → employees → 设计表 ----
   let p = await treePos('演示 SQLite 库');

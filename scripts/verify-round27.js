@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 结构同步验证（9229 新实例；夹具 fx-w27：sqlite dh_w27_a/b + mssql master.dbo dh_w27_m/m2）：
+// v0927.53 结构同步验证（9229 新实例；夹具 fx-w27：sqlite dh_w27_a/b + mssql master.dbo dh_w27_m/m2）：
 //  T1 工具栏「结构同步」→ 页签打开
 //  T2 sqlite→mssql 比较：employees=新建(默认勾选)、dh_w27_a/b=新建、dh_w27_m/m2=目标独有(默认不勾)；SQL 预览含建表/索引/CHECK/DECIMAL(10,2)
 //  T3 取消勾选 employees → 应用（确认弹窗）→ 日志 2 项建表 → mssql 侧 verify-a 类型断言（BIGINT/NVARCHAR/DECIMAL + 索引 + CHECK）
@@ -56,7 +56,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- antd Select：mousedown 打开下拉，点选项 ----
   const DBG = !!process.env.DBG27;

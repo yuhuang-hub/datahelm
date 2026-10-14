@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 固定标签页 — UI 端到端验证（9227 新实例；无需夹具，employees 基线表即可）
+// v0927.53 固定标签页 — UI 端到端验证（9227 新实例；无需夹具，employees 基线表即可）
 //  U0 备标签：连接右键「新建查询」×2 + 双击 employees 开数据页 → [查询1, 查询2, employees]
 //  T1 右键 employees → 固定标签页 → 置顶排序 [employees(p), 查询1, 查询2]，图钉标记在、X 消失、激活键不变
 //  T2 右键已固定 employees → 菜单首项=取消固定、关闭禁用；右键查询2 → 关闭全部 → 仅剩 employees（固定受保护）
@@ -64,7 +64,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   let ok = false;
   for (let i = 0; i < 40 && !ok; i += 1) { ok = await ev("!!document.querySelector('.top-toolbar .tb-btn')"); if (!ok) await sleep(500); }
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- U0 备标签：2 个查询页 + 1 个数据页 ----
   const connP = await waitTree('演示 SQLite 库', 0);

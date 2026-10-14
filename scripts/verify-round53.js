@@ -1,9 +1,9 @@
 'use strict';
-// v0927.52 关闭 DevTools 快捷键验证：
+// v0927.53 关闭 DevTools 快捷键验证：
 //  T1 Ctrl+Shift+I 合成按键 → /json/list 无 devtools:// 目标（主进程 before-input-event 拦截）
 //  T2 F12 同上
 //  T3 拦截不影响应用：evaluate 通路 + 状态栏仍在
-//  S0 版本 v0927.52 / S5 无控制台错误
+//  S0 版本 v0927.53 / S5 无控制台错误
 // 目标清单经 127.0.0.1:<CDP_PORT>/json/list 读取（端口限制 9222-9230 测试段，本机回环）
 const http = require('http');
 const CDP = require('chrome-remote-interface');
@@ -51,8 +51,8 @@ const devtoolsCount = async () => {
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  if (!/v0927\.52/.test(sb)) fail('S0 状态栏 v0927.52', sb);
-  else pass('S0 状态栏 v0927.52');
+  if (!/v0927.53/.test(sb)) fail('S0 状态栏 v0927.53', sb);
+  else pass('S0 状态栏 v0927.53');
 
   const before = await devtoolsCount();
 

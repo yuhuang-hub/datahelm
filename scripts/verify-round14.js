@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 数据库品牌图标验证（sqlite+mssql 双连接的 9228 新实例）：
+// v0927.53 数据库品牌图标验证（sqlite+mssql 双连接的 9228 新实例）：
 //  A 连接树：两连接行图标换成品牌 svg（data-dh-dbt + 品牌色 + 尺寸）
 //  B 展开后连接图标保持品牌 svg、分类图标仍是 antd 图标（树行为未破坏）
 //  C 连接右键菜单：打开/关闭连接菜单项图标为该库品牌 svg
@@ -52,7 +52,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await sleep(2500);
   // S0 版本
   const ver = await ev(`(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()`);
-  if (/v0927.52/.test(String(ver))) pass('S0 状态栏 v0927.52'); else fail('S0 状态栏 v0927.52', String(ver).slice(0, 120));
+  if (/v0927.53/.test(String(ver))) pass('S0 状态栏 v0927.53'); else fail('S0 状态栏 v0927.53', String(ver).slice(0, 120));
 
   // A1 sqlite 连接行：品牌 svg + 品牌色
   const a1 = await connIcon('演示 SQLite 库');

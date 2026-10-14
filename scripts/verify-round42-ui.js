@@ -1,7 +1,7 @@
 'use strict';
-// v0927.52 SQL 智能补全 — UI 端到端验证（9227 测试实例，无外部夹具：
+// v0927.53 SQL 智能补全 — UI 端到端验证（9227 测试实例，无外部夹具：
 //   sqlite 用演示库 employees；mssql 现场建 w42_sn 并在结尾 DROP）
-//  S0 状态栏版本 v0927.52
+//  S0 状态栏版本 v0927.53
 //  U0 连接右键「新建查询」→ sqlite 查询页编辑器就绪
 //  T1 关键字补全：输入 SEL 弹出 SELECT
 //  T2 片段 ssf：选中回车 → 展开 SELECT * FROM 表名
@@ -184,7 +184,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 状态栏版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 状态栏版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- U0 打开 sqlite 查询页 ----
   const conn = await waitTree('演示 SQLite 库');

@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 结果集对比验证（固定基准快照 × 当前结果并排 diff）：
+// v0927.53 结果集对比验证（固定基准快照 × 当前结果并排 diff）：
 //  T1 空态：未固定基准提示 + 固定按钮禁用（无结果集）+ 无 diff 格
 //  T2 固定基准：B=结果1（4 行）→ 固定为基准 → A 帽含 结果1/固定 + 统计 完全一致 · 0 diff
 //  T3 单格差异（CASE 改首行 name）：统计 不同 1 格；两侧各 1 个高亮 td（共 2）；B 侧文本=对比改动、A 侧≠
@@ -7,7 +7,7 @@
 //  T5 列数不同（2 列 vs 基准 3 列）：不同 4 格（列数不同）；4 高亮 + 4 缺格
 //  T6 完全一致（同数据重跑，仅注释标记不同）：完全一致 · 0 diff · 0 miss
 //  T7 多结果切换（一次运行两语句 → 结果1/结果2）：默认 B=结果1 完全一致；下拉切 结果2 → 不同 3 格（行数不同）
-//  S0 版本 v0927.52 / S5 无控制台错误
+//  S0 版本 v0927.53 / S5 无控制台错误
 // 注：每条 SQL 尾部注释 marker 用于 waitFresh 消息面板完成判定（结果网格行数在 T6 会因旧行数相同而误判）
 const CDP = require('chrome-remote-interface');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -60,8 +60,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  if (!/v0927\.52/.test(sb)) fail('S0 状态栏 v0927.52', sb);
-  else pass('S0 状态栏 v0927.52');
+  if (!/v0927.53/.test(sb)) fail('S0 状态栏 v0927.53', sb);
+  else pass('S0 状态栏 v0927.53');
 
   // ---- 打开 sqlite → employees → 新建查询（可重入，同 round49/50）----
   let p = null;

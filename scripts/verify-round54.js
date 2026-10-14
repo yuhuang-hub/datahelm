@@ -1,11 +1,11 @@
 'use strict';
-// v0927.52 结果对比「按键对齐」验证（固定基准快照 × 当前结果，按同名列对齐）：
+// v0927.53 结果对比「按键对齐」验证（固定基准快照 × 当前结果，按同名列对齐）：
 //  T1 位置对齐（默认）：倒序同数据 → 有差异（行错位）；切「按键对齐」→ 按 id 对齐 完全一致 · 0 diff
 //  T2 键对齐单格差异（倒序 + 首行 name 改动）：不同 1 格 · 两侧各 1 高亮 · B 侧文本=键对齐改动
 //  T3 仅A 行（剔末行 3 行）：匹配 3 行 · 仅A 1 · 仅B 0 · 不同 3 格；A 侧 3 高亮 + B 侧 3 缺格
 //  T4 键列切换 name：统计前缀 按 name 对齐 · 匹配 3 行
 //  T5 切回位置对齐：回到位置对齐既有语义（不同 3 格（行数不同））
-//  S0 版本 v0927.52 / S5 无控制台错误
+//  S0 版本 v0927.53 / S5 无控制台错误
 const CDP = require('chrome-remote-interface');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 (async () => {
@@ -57,8 +57,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  if (!/v0927\.52/.test(sb)) fail('S0 状态栏 v0927.52', sb);
-  else pass('S0 状态栏 v0927.52');
+  if (!/v0927.53/.test(sb)) fail('S0 状态栏 v0927.53', sb);
+  else pass('S0 状态栏 v0927.53');
 
   // ---- 打开 sqlite → employees → 新建查询（可重入）----
   let p = null;

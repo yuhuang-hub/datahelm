@@ -1,11 +1,11 @@
 'use strict';
-// v0927.52 查询耗时历史/慢查询标记验证：
+// v0927.53 查询耗时历史/慢查询标记验证：
 //  T1 快查询：消息面板 ✓ [Nms] 耗时着色 span 存在且无慢档类名
 //  T2 历史弹窗：条目含耗时 chip（含行数），点击行载入编辑器并关弹窗
 //  T3 慢查询（15M 递归 CTE，实测 ~2.6s）：消息面板耗时 span 标橙 dh-ms-slow；历史 chip 带 · 慢
 //  T4 失败语句入史：✗ 失败 标记；统计行 计时 N 次 · 最慢 Xms
 //  T5 清空历史：暂无历史 + localStorage dh_hist_* 键清空 + 清空按钮禁用
-//  S0 版本 v0927.52 / S5 无控制台错误
+//  S0 版本 v0927.53 / S5 无控制台错误
 //  前置 T0：清空历史（可重入；localStorage 跨实例共享，上轮套件可能留有条目）
 const CDP = require('chrome-remote-interface');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -58,8 +58,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  if (!/v0927\.52/.test(sb)) fail('S0 状态栏 v0927.52', sb);
-  else pass('S0 状态栏 v0927.52');
+  if (!/v0927.53/.test(sb)) fail('S0 状态栏 v0927.53', sb);
+  else pass('S0 状态栏 v0927.53');
 
   // ---- 打开 sqlite → employees → 新建查询（可重入，同 round49）----
   let p = null;

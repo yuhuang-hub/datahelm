@@ -1,7 +1,7 @@
 {
   "name": "datahelm",
   "productName": "DataHelm",
-  "version": "9.27.52",
+  "version": "9.27.53",
   "description": "DataHelm — Navicat 风格桌面数据库客户端（独立实现）：MySQL / PostgreSQL / SQLite / SQL Server，连接管理、对象树、数据表格编辑、SQL 查询、表设计器、SSH 隧道",
   "main": "electron/main.js",
   "author": "zcode",

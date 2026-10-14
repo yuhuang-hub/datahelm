@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 工具栏「表/视图」= 对象列表页（语义改为查看已有清单，非新建；跟随所选库自动切换）验证：
+// v0927.53 工具栏「表/视图」= 对象列表页（语义改为查看已有清单，非新建；跟随所选库自动切换）验证：
 //  T1 sqlite 选 employees → 工具栏「表」→ 列表页：employees 行 + 行数数字 + 单文件库 Tag + 标题「表 · 演示 SQLite 库」
 //  T2 Segmented 切「视图」→ 空列表 0 个视图 + 标题「视图 · 演示 SQLite 库」；切回「表」恢复
 //  T3 行内「打开」→ employees 数据页打开（新页签 + 网格）
@@ -8,7 +8,7 @@
 //  T4 树点选 mssql master → 列表页自动跟随：标题「表 · master」+ 库下拉=master + 行>0 + 页签数不变（同页重定向不新开）
 //  T5 页内库下拉切 msdb → 标题「表 · msdb」+ 列表重载
 //  T6 树点回 sqlite employees → 跟随回「表 · 演示 SQLite 库」+ 单文件库 Tag 回来
-//  B1/S5 无边界误触发 + 无控制台错误 / S0 版本 v0927.52
+//  B1/S5 无边界误触发 + 无控制台错误 / S0 版本 v0927.53
 const CDP = require('chrome-remote-interface');
 const fs = require('fs');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -81,7 +81,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   const ver = await ev(`document.querySelector('.statusbar').textContent`);
-  if (/v0927\.52/.test(String(ver))) pass('S0 状态栏 v0927.52'); else fail('S0 状态栏 v0927.52', String(ver).slice(0, 80));
+  if (/v0927.53/.test(String(ver))) pass('S0 状态栏 v0927.53'); else fail('S0 状态栏 v0927.53', String(ver).slice(0, 80));
 
   // ---- T1 sqlite：选 employees → 工具栏「表」→ 对象列表 ----
   let p = await waitTree('演示 SQLite 库', 0, 10);

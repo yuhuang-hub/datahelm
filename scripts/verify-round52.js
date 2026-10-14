@@ -1,12 +1,12 @@
 'use strict';
-// v0927.52 SQL 历史跨连接聚合验证：
+// v0927.53 SQL 历史跨连接聚合验证：
 //  T1 默认范围=当前连接：仅 sqlite 条目、无连接 chip、耗时 chip 照旧（round50 行为不变）
 //  T2 切「全部连接」：sqlite 1 条 + mssql 种子 2 条按时间归并（首条=最新 sqlite 运行）；
 //     行内连接 chip（演示 SQLite 库 / 1）；统计 计时 3 次 · … · 2 个连接；清空按钮禁用
 //  T3 聚合视图点击他连接条目 → 载入编辑器 + 弹窗关闭（SQL 只是文本，跨连接载入合法）
 //  T4 重开弹窗：范围回默认当前连接；清空按钮恢复可用
 //  T5 切到具体他连接（mssql '1'）：仅其 2 条、无 chip（单连接视图）；清空禁用（防误删他连接）
-//  S0 版本 v0927.52 / S5 无控制台错误
+//  S0 版本 v0927.53 / S5 无控制台错误
 // 前置 T0：清空当前连接历史（可重入；localStorage 跨实例共享）。mssql 历史用 CDP 直接种子
 // （dh_hist_c-mssql-1 两条 legacy_r52m*），不依赖真实 mssql 连接——聚合逻辑只读 localStorage。
 const CDP = require('chrome-remote-interface');
@@ -60,8 +60,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  if (!/v0927\.52/.test(sb)) fail('S0 状态栏 v0927.52', sb);
-  else pass('S0 状态栏 v0927.52');
+  if (!/v0927.53/.test(sb)) fail('S0 状态栏 v0927.53', sb);
+  else pass('S0 状态栏 v0927.53');
 
   // ---- 打开 sqlite → employees → 新建查询（可重入，同 round50/51）----
   let p = null;

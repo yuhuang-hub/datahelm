@@ -20,7 +20,7 @@ const backup = require('./services/backup');
 const dbgPath = path.join(app.getPath('userData'), 'ui-debug.log');
 const dbg = (line) => { try { fs.appendFileSync(dbgPath, `${new Date().toISOString()} ${line}\n`); } catch {} };
 
-const APP_VER = 'v0927.52';
+const APP_VER = 'v0927.53';
 // DH_QUIET=1：自动化电池专用——Splash 不置顶、主窗 showInactive 不抢焦点，
 // 长时间回归期间用户可正常操作其他软件（渲染管线不受影响：遮挡计算已全局禁用 + 主窗关节流）
 const QUIET_UI = process.env.DH_QUIET === '1';

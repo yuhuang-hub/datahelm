@@ -93,7 +93,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     return true;
   };
   const sqlPreviewText = () => dEv(`(() => { const p = document.querySelector('.sql-preview'); return p ? p.textContent : null; })()`);
-  // v0927.52 起「保存」直接执行；预览改为只读：切 SQL 预览页签（激活即按当前差异刷新）读文本，不保存
+  // v0927.53 起「保存」直接执行；预览改为只读：切 SQL 预览页签（激活即按当前差异刷新）读文本，不保存
   const savePreview = async (label) => {
     const before = await sqlPreviewText();
     await designTabByName('SQL 预览');
@@ -124,7 +124,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     }
     return false;
   };
-  // v0927.52：保存 = 直接执行 applyAlter；完成信号 = 内层页签回到「字段」（applyPreview 成功后 setActiveTab('fields')）
+  // v0927.53：保存 = 直接执行 applyAlter；完成信号 = 内层页签回到「字段」（applyPreview 成功后 setActiveTab('fields')）
   const saveAndExecute = async () => {
     if (!(await clickDesignBtn('保存'))) return { err: 'no-save-btn' };
     let back = false;
@@ -236,7 +236,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  sb.includes('v0927.52') ? pass('S0 状态栏 v0927.52') : fail('S0 状态栏 v0927.52', sb);
+  sb.includes('v0927.53') ? pass('S0 状态栏 v0927.53') : fail('S0 状态栏 v0927.53', sb);
 
   // ================= Part A：sqlite =================
   let p = await treePos('演示 SQLite 库');

@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 索引可视化设计器验证（9229 新实例；夹具 fx-w31：sqlite + mssql master.dbo dh_w31_t）：
+// v0927.53 索引可视化设计器验证（9229 新实例；夹具 fx-w31：sqlite + mssql master.dbo dh_w31_t）：
 //  A sqlite：索引面板 表达式键 LOWER(nm) + nm 降序 + 部分索引 WHERE qty>0 → 保存 → DDL 落库
 //  B round-trip：重开设计器回读三项 → 原样「保存」→ 没有检测到变更（canon 稳定不重建）
 //  C 编辑 WHERE qty>5 → 保存 → DDL 更新
@@ -180,7 +180,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     if (!ok) await sleep(500);
   }
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ================= A：sqlite 表达式键 + 降序 + 部分索引 =================
   let p = await waitTree('演示 SQLite 库', 0, 10);

@@ -93,7 +93,7 @@ async function main() {
     await sleep(400);
   };
   await shot('03-cell-editing');
-  // C3（v0927.52 起单元格提交即自动落库：脏标记瞬时、放弃更改不常驻——断言值落库且无滞留脏态）
+  // C3（v0927.53 起单元格提交即自动落库：脏标记瞬时、放弃更改不常驻——断言值落库且无滞留脏态）
   await typeReal(`document.querySelector('.grid-area input.cell-edit-input')`, origName + 'X');
   await pressEnter();
   await sleep(1500);

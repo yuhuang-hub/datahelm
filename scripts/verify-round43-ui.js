@@ -1,6 +1,6 @@
 'use strict';
-// v0927.52 执行计划树形可视化验证（9227 新实例；自足式：sqlite 用 demo employees，mssql 自建 w43_a/w43_b 并自清）：
-//  S0 状态栏版本 v0927.52
+// v0927.53 执行计划树形可视化验证（9227 新实例；自足式：sqlite 用 demo employees，mssql 自建 w43_a/w43_b 并自清）：
+//  S0 状态栏版本 v0927.53
 //  U0 sqlite 连接右键 → 新建查询 → 编辑器就绪
 //  T1 sqlite EQP 树：解释 WHERE id=1 → 默认树形（QUERY PLAN 根 + SEARCH employees，无网格）
 //  T2 兄弟步骤：解释 ORDER BY name → SCAN employees + USE TEMP B-TREE 两子级挂根
@@ -47,7 +47,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // 活动查询页内的计划树/网格信息（嵌套 Tabs 都取有高度的最内层）
   const paneInfo = () => ev(`(() => {

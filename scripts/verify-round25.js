@@ -1,10 +1,10 @@
 'use strict';
-// v0927.52 三处修复验证（9229 新实例，sqlite 演示库）：
+// v0927.53 三处修复验证（9229 新实例，sqlite 演示库）：
 //  G1 未打开连接：新建查询/表/视图/ER图/用户 全禁用；表 title=请先打开数据库连接；连接/查询列表/备份可用
 //  G2 双击打开 sqlite 连接后：表/视图/新建查询/用户 恢复可用（ER 仍禁用待选表）；表 title 恢复查看语义
 //  D1 设计器保存直接执行：改字段名→SQL 预览只读（无「执行变更」按钮）→「保存」不跳预览、回「字段」页+已执行消息+新名回读→还原
 //  V1 新建视图长表名：卡片头表名省略号截断+title 提示，「全选」标签不折行（单行高度），卡片宽≤340，全选可点
-//  B1/S5 无边界误触发 + 无控制台错误 / S0 版本 v0927.52
+//  B1/S5 无边界误触发 + 无控制台错误 / S0 版本 v0927.53
 const CDP = require('chrome-remote-interface');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const LONG = 'dh_vd_very_long_table_name_for_header_overflow_check';
@@ -55,7 +55,7 @@ const LONG = 'dh_vd_very_long_table_name_for_header_overflow_check';
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- G1 未打开连接：全禁用 ----
   const g1 = await ev(`(() => { const bs = [...document.querySelectorAll('.top-toolbar .tb-btn')]; return { dis: bs.filter((b) => b.disabled).map((b) => b.textContent.replace(/\\s+/g, '')), ena: bs.filter((b) => !b.disabled).map((b) => b.textContent.replace(/\\s+/g, '')) }; })()`);

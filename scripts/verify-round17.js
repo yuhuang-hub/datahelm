@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 电子绕核 Splash + Ctrl+S 保存 + 关窗未保存确认（DH_SPLASH_MS=8000 实例，9228）：
+// v0927.53 电子绕核 Splash + Ctrl+S 保存 + 关窗未保存确认（DH_SPLASH_MS=8000 实例，9228）：
 //  SP1 Splash 无背景原子：轨道/核静止、三颗电子 offset-path 绕核运动（无文字/无背景）
 //  SP2 dhSplashClose → 原子放大淡出 → 窗口自然销毁；日志 shown→closed ≥800ms
 //  K1 Ctrl+S 未命名查询 → 弹「保存查询」→ 命名保存成功
@@ -96,7 +96,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     try {
       const log = fs.readFileSync('D:/DataHelm/.tmp-ud7/ui-debug.log', 'utf8');
       const ts = (l) => Date.parse(l.slice(0, 24));
-      const sh = log.split('\n').filter((l) => l.includes('DH-SPLASH shown v0927.52')).pop();
+      const sh = log.split('\n').filter((l) => l.includes('DH-SPLASH shown v0927.53')).pop();
       const cl = log.split('\n').filter((l) => l.includes('DH-SPLASH closed')).pop();
       if (sh && cl && ts(cl) - ts(sh) >= 800) pass(`SP2c 日志 shown→closed（${ts(cl) - ts(sh)}ms）`);
       else fail('SP2c 日志时序', `shown=${!!sh} closed=${!!cl}`);
@@ -174,7 +174,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   await sleep(1500);
   const ver = await ev(`document.querySelector('.statusbar').textContent`);
-  if (/v0927.52/.test(String(ver))) pass('S0 状态栏 v0927.52'); else fail('S0 状态栏 v0927.52', String(ver).slice(0, 100));
+  if (/v0927.53/.test(String(ver))) pass('S0 状态栏 v0927.53'); else fail('S0 状态栏 v0927.53', String(ver).slice(0, 100));
 
   // 打开查询页：sqlite 展开 → 表分类右键 新建查询
   let p = await posOf('演示 SQLite 库');

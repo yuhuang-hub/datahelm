@@ -81,7 +81,7 @@ export default function Sidebar({ conns, sessions, actions, ver, dark, onToggleD
 
   // 调试标记（ui-debug.log 落盘）：版本确认 + 渲染/异步错误捕获（含 stack，便于离线定位）
   useEffect(() => {
-    console.log('DH-UI-VER v0927.52 五合一：①对象列表页 MSSQL 多架构——默认列全部架构（行带架构列、打开/设计/删除按行架构透传），新增架构下拉可切 dbo/非 dbo；②sp_rename 全面纯点分路径（空 schema 双点形态、引号表名+裸列名混合形态均为语法错，设计器 MSSQL 列改名因此修复）；③结果对比基准多快照管理（命名快照/切换/删除）；④表设计器重建表路径的他表外键引用限制提示（预览区横幅，仅提示不阻断）；⑤查询历史搜索与收藏（关键词过滤 + 只看收藏）。');
+    console.log('DH-UI-VER v0927.53 库节点菜单 db 兜底：mssql/mysql/mongo 库节点右键的新建查询/新建表(集合)/数据传输/导出数据库/结构同步/数据同步/ER 图，库名取 node.name（此前 db 为空落到会话默认库——修复「选 A 库导出却列出 master 的表」）；v0927.52 五合一：①对象列表页 MSSQL 多架构——默认列全部架构（行带架构列、打开/设计/删除按行架构透传），新增架构下拉可切 dbo/非 dbo；②sp_rename 全面纯点分路径；③结果对比基准多快照管理；④表设计器重建表路径的他表外键引用限制提示；⑤查询历史搜索与收藏。');
     const onErr = (ev) => {
       const stack = ev.error && ev.error.stack ? ' | STACK ' + String(ev.error.stack).slice(0, 700) : '';
       console.log('DH-ERR ' + ev.message + stack);
@@ -516,8 +516,10 @@ export default function Sidebar({ conns, sessions, actions, ver, dark, onToggleD
         ];
       }
       const isMongo = conn && conn.type === 'mongo';
+      // mssql/mysql/mongo 的库节点只带 name 不带 db（子级才带）：db 节点库名取 node.name；schema 节点（pg/oracle）仍用 node.db
+      const ndb = node.db || (node.type === 'db' ? node.name : undefined);
       const items = [
-        { key: 'q', label: '新建查询', icon: <SearchOutlined />, onClick: () => actions.newQuery(ctx) },
+        { key: 'q', label: '新建查询', icon: <SearchOutlined />, onClick: () => actions.newQuery({ ...ctx, db: ndb }) },
         isMongo
           ? {
               key: 'nt',
@@ -528,15 +530,15 @@ export default function Sidebar({ conns, sessions, actions, ver, dark, onToggleD
                   title: '新建集合',
                   label: '集合名',
                   onOk: (v) =>
-                    dbApi(node.connId, 'createTable', { db: node.db, name: v.trim() })
+                    dbApi(node.connId, 'createTable', { db: ndb, name: v.trim() })
                       .then(() => { message.success('集合已创建'); actions.refreshTree(); })
                       .catch((e) => message.error(e.message)),
                 }),
             }
-          : { key: 'nt', label: '新建表', icon: <PlusOutlined />, onClick: () => actions.newTable(ctx) },
+          : { key: 'nt', label: '新建表', icon: <PlusOutlined />, onClick: () => actions.newTable({ ...ctx, db: ndb }) },
         { type: 'divider' },
         !isMongo && conn && RELATIONAL.includes(conn.type)
-          ? { key: 'transferdb', label: '数据传输…', icon: <SwapOutlined />, onClick: () => setTransfer({ connId: node.connId, db: node.db, schema: node.schema }) }
+          ? { key: 'transferdb', label: '数据传输…', icon: <SwapOutlined />, onClick: () => setTransfer({ connId: node.connId, db: ndb, schema: node.schema }) }
           : null,
         !isMongo && conn && RELATIONAL.includes(conn.type)
           ? {
@@ -544,22 +546,21 @@ export default function Sidebar({ conns, sessions, actions, ver, dark, onToggleD
               label: '导出数据库…',
               icon: <ExportOutlined />,
               // 转储 SQL 文件：可选仅架构 / 仅数据 / 架构+数据（DumpModal）
-              onClick: () => setDump({ connId: node.connId, db: node.db, schema: node.schema, title: `导出数据库「${node.name}」` }),
+              onClick: () => setDump({ connId: node.connId, db: ndb, schema: node.schema, title: `导出数据库「${node.name}」` }),
             }
           : null,
         !isMongo && conn && RELATIONAL.includes(conn.type)
-          ? { key: 'syncdb', label: '结构同步…', icon: <DiffOutlined />, onClick: () => actions.openSync({ connId: node.connId, db: node.db || '', schema: node.schema || '' }) }
+          ? { key: 'syncdb', label: '结构同步…', icon: <DiffOutlined />, onClick: () => actions.openSync({ connId: node.connId, db: ndb || '', schema: node.schema || '' }) }
           : null,
         !isMongo && conn && RELATIONAL.includes(conn.type)
-          ? { key: 'datasync', label: '数据同步…', icon: <DatabaseOutlined />, onClick: () => actions.openDataSync({ connId: node.connId, db: node.db || '', schema: node.schema || '' }) }
+          ? { key: 'datasync', label: '数据同步…', icon: <DatabaseOutlined />, onClick: () => actions.openDataSync({ connId: node.connId, db: ndb || '', schema: node.schema || '' }) }
           : null,
         conn && RELATIONAL.includes(conn.type)
           ? {
               key: 'er',
               label: '查看 ER 图',
               icon: <ApartmentOutlined />,
-              // mssql 等驱动的库节点只带 name（子级才带 db），这里兜底取库名
-              onClick: () => actions.openEr({ connId: node.connId, db: node.db || (node.type === 'db' ? node.name : undefined), schema: node.schema }),
+              onClick: () => actions.openEr({ connId: node.connId, db: ndb, schema: node.schema }),
             }
           : null,
         { key: 'copy', label: isMongo ? '复制数据库名' : '复制库名', icon: <CopyOutlined />, onClick: () => copyTextOk('库名', node.name) },

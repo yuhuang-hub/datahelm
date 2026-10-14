@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 树目录扩展 + 工具栏选择联动 + 模型 验证（9229 新实例，sqlite 演示库 + mssql master）：
+// v0927.53 树目录扩展 + 工具栏选择联动 + 模型 验证（9229 新实例，sqlite 演示库 + mssql master）：
 //  TB1 初始：表/视图可用（sqlite 兜底上下文），ER 图禁用（未选中表）
 //  TB2 选中 mssql master 库节点 → 表/视图可用、ER 仍禁用（选中具体表才开）
 //  TB3 选中表节点 dh_ix_t → ER 图可用 → 点击打开「ER 图 · master」
@@ -117,9 +117,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
-  // TB1 初始可用态（v0927.52：未打开连接时表/视图/ER 图全禁用）
+  // TB1 初始可用态（v0927.53：未打开连接时表/视图/ER 图全禁用）
   const tb1 = await tbState();
   tb1 && tb1.t === false && tb1.v === false && tb1.e === false
     ? pass('TB1 初始（未打开连接）：表/视图/ER 图全部禁用')
@@ -185,7 +185,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       : fail('TB4 回选库后可用态', JSON.stringify(tb4));
   } else fail('TB4 前置', 'master 行未找到');
 
-  // ---- V1 工具栏「视图」→ 对象列表页（v0927.52 起语义：查看已有清单，非新建；新建入口在页内）----
+  // ---- V1 工具栏「视图」→ 对象列表页（v0927.53 起语义：查看已有清单，非新建；新建入口在页内）----
   if (await topBtn('视图')) {
     let t = null;
     for (let i = 0; i < 20 && !t; i += 1) { t = await activeTabTitle(); if (!t) await sleep(400); }
@@ -201,7 +201,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   } else fail('V1 工具栏视图按钮', '不可用或未找到');
 
   // ---- C1/C2 sqlite 索引目录 ----
-  // ---- C0/C1 sqlite：树无「索引」分类；对象列表表行展开（v0927.52：结构随表行查看） ----
+  // ---- C0/C1 sqlite：树无「索引」分类；对象列表表行展开（v0927.53：结构随表行查看） ----
   p = await waitTree('演示 SQLite 库');
   if (!p) fail('C1 前置', 'sqlite 连接行未找到');
   else {

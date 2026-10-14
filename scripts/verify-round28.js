@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 数据同步验证（9229 新实例；夹具 fx-w28：sqlite dh_w28_t/nopk + mssql master.dbo dh_w28_t/nopk）：
+// v0927.53 数据同步验证（9229 新实例；夹具 fx-w28：sqlite dh_w28_t/nopk + mssql master.dbo dh_w28_t/nopk）：
 //  T1 工具栏「数据同步」→ 页签打开
 //  T2 sqlite→mssql 比较：dh_w28_t=有差异(+2/≠1/-1 默认勾选)、dh_w28_nopk=无主键(禁勾)、employees=目标缺表
 //  T3 SQL 预览含 INSERT/UPDATE/DELETE + N'' 字面量
@@ -56,7 +56,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- antd Select：mousedown 打开下拉，点选项 ----
   const DBG = !!process.env.DBG28;

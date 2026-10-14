@@ -54,7 +54,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- 打开 sqlite → 表 → employees ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  sb.includes('v0927.52') ? pass('T0 状态栏 v0927.52') : fail('T0 状态栏 v0927.52', sb);
+  sb.includes('v0927.53') ? pass('T0 状态栏 v0927.53') : fail('T0 状态栏 v0927.53', sb);
   let p = await treePos('演示 SQLite 库');
   await dblclick(p.x, p.y);
   p = await treePos('表');

@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 数据传输向导验证（sqlite 9227 实例 + localhost MSSQL master + 临时 sqlite 目标连接）：
+// v0927.53 数据传输向导验证（sqlite 9227 实例 + localhost MSSQL master + 临时 sqlite 目标连接）：
 //  A 表右键入口：向导预勾选/选项默认值；sqlite→mssql 结构+数据（跨方言类型映射）；INFORMATION_SCHEMA 回读类型与行数
 //  策略矩阵：仅结构 / 已存在=跳过 / 已存在=报错（遇错继续）
 //  B 表分类入口：无预勾选 + 全选/反选；sqlite→sqlite 目标连接（自动建库文件）；离线核验目标库
@@ -200,7 +200,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  sb.includes('v0927.52') ? pass('S0 状态栏 v0927.52') : fail('S0 状态栏 v0927.52', sb);
+  sb.includes('v0927.53') ? pass('S0 状态栏 v0927.53') : fail('S0 状态栏 v0927.53', sb);
 
   // ---- A0 sqlite 建源表（dh_ 前缀，便于清理；列覆盖 INT/TEXT/REAL/VARCHAR/DATE 类型族）----
   let p = await treePos('演示 SQLite 库');

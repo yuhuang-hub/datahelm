@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 视图设计器验证（sqlite 9228 实例 + localhost MSSQL master）：
+// v0927.53 视图设计器验证（sqlite 9228 实例 + localhost MSSQL master）：
 //  A sqlite：分类入口建视图（添加表/勾列/FK 推断 JOIN/WHERE/ORDER）→ SQL 预览 → 结果预览 → 脏点 → 保存 → 树刷新 → 查询视图
 //  B 编辑回读：设计视图 打开已建视图（表/勾选列/连接/WHERE 还原）→ 加列保存 → 视图列变化
 //  D 菜单入口：视图节点 设计视图/编辑视图；未保存关闭确认
@@ -179,7 +179,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  sb.includes('v0927.52') ? pass('S0 状态栏 v0927.52') : fail('S0 状态栏 v0927.52', sb);
+  sb.includes('v0927.53') ? pass('S0 状态栏 v0927.53') : fail('S0 状态栏 v0927.53', sb);
 
   // ---- A0 sqlite 建源表（外键：emp.dept_id → dept.id）----
   let p = await treePos('演示 SQLite 库');

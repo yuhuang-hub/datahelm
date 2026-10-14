@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 标签页拖拽排序 — UI 端到端验证（9227 新实例；无需夹具，employees 基线表即可）
+// v0927.53 标签页拖拽排序 — UI 端到端验证（9227 新实例；无需夹具，employees 基线表即可）
 //  U0 备标签：连接右键「新建查询」×2 + 双击 employees 开数据页 → [查询1, 查询2, employees]
 //  T1 拖 查询1 → 投放 employees：源取目标位（目标及后续右移）→ [查询2, 查询1, employees]，激活不变
 //  T2 拖 employees（尾）→ 投放 查询2（头）：→ [employees, 查询2, 查询1]，激活不变
@@ -74,7 +74,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   let ok = false;
   for (let i = 0; i < 40 && !ok; i += 1) { ok = await ev("!!document.querySelector('.top-toolbar .tb-btn')"); if (!ok) await sleep(500); }
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- U0 备标签：2 个查询页 + 1 个数据页，页签可拖拽 ----
   const connP = await waitTree('演示 SQLite 库', 0);

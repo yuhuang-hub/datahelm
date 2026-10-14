@@ -1,12 +1,12 @@
 'use strict';
-// v0927.52 表行展开结构 + 树「索引」分类移除 验证（9229 新实例，sqlite 演示库 + mssql master；夹具 scripts/fx/fx-add）：
+// v0927.53 表行展开结构 + 树「索引」分类移除 验证（9229 新实例，sqlite 演示库 + mssql master；夹具 scripts/fx/fx-add）：
 //  T0 sqlite 树无「索引」分类（表/视图/触发器 仍在）
 //  E1 employees 展开：6 组齐全；字段 5 项含 id·INTEGER·主键 / name；索引/外键/唯一键/检查/触发器 全为「无」（PK 后备索引不列）
 //  E2 dh_det（富结构夹具）展开：六组全非空 —— 索引 dh_det_ix（nm）、外键 fk_0：mgr → employees(id)、唯一键含 nm、检查 id >= 0、触发器 dh_det_tg
 //  E3 收起：再点展开图标 → 明细消失
 //  E4 视图 dh_det_v 展开：只有「字段」一组（视图不展示索引/外键等）
 //  E5 mssql master 跟随 → 展开 dh_ix_t：索引 dh_ix_a（nm）+ 6 组
-//  B1/S5 无边界误触发 / 无控制台错误；S0 版本 v0927.52
+//  B1/S5 无边界误触发 / 无控制台错误；S0 版本 v0927.53
 const CDP = require('chrome-remote-interface');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -81,7 +81,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   const ver = await ev(`document.querySelector('.statusbar').textContent`);
-  if (/v0927\.52/.test(String(ver))) pass('S0 状态栏 v0927.52'); else fail('S0 状态栏 v0927.52', String(ver).slice(0, 80));
+  if (/v0927.53/.test(String(ver))) pass('S0 状态栏 v0927.53'); else fail('S0 状态栏 v0927.53', String(ver).slice(0, 80));
 
   // ---- T0 树无「索引」分类 ----
   let p = await waitTree('演示 SQLite 库', 0, 10);

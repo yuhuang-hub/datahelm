@@ -75,7 +75,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- V1 版本标记 ----
   const sb = await statusbar();
-  sb.includes('v0927.52') ? pass('V1 状态栏 v0927.52') : fail('V1 状态栏 v0927.52', sb);
+  sb.includes('v0927.53') ? pass('V1 状态栏 v0927.53') : fail('V1 状态栏 v0927.53', sb);
 
   // ---- 打开 sqlite 连接 → 表分类 → employees ----
   let p = await treePos('演示 SQLite 库');

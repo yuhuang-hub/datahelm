@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 对象树过滤 — UI 端到端验证（9227 测试实例；夹具已备：
+// v0927.53 对象树过滤 — UI 端到端验证（9227 测试实例；夹具已备：
 //   sqlite .tmp-ud7/demo-test.db employees（基线）+ w40_alpha(id/nm40/qty)/w40_beta/w40_gamma + 视图 w40_alpha_v）
 //  T1 过滤 w40_：三张 w40 表可见，employees 隐藏，表分类仍在
 //  T2 过滤 employ：employees 可见，w40_* 全隐藏
@@ -67,7 +67,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   let ok = false;
   for (let i = 0; i < 40 && !ok; i += 1) { ok = await ev("!!document.querySelector('.top-toolbar .tb-btn')"); if (!ok) await sleep(500); }
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- U0 连接 + 展开表分类，基线表全部可见 ----
   if (!(await ensureOpen('演示 SQLite 库', 0))) { fail('U0', '连接节点未展开'); await client.close(); return; }

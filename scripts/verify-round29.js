@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 运行 SQL 文件/还原备份 验证（9229 新实例；夹具 fx-w29：backups 目录 3 个测试 sql + mssql master.dbo dh_w29_*）：
+// v0927.53 运行 SQL 文件/还原备份 验证（9229 新实例；夹具 fx-w29：backups 目录 3 个测试 sql + mssql master.dbo dh_w29_*）：
 //  T1 连接右键「运行 SQL 文件…」→ 页签打开 + preset 连接已选（sqlite）
 //  T2 选 w29-restore.sql → 运行 → 结果 语句 4 · 成功 4 · 失败 0（分号/转义引号/UPDATE 均原样执行）
 //  T3 sqlite 侧 verify-a：dh_w29_t 两行与脚本预期完全一致（且已落盘）
@@ -60,7 +60,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- antd Select：mousedown 打开下拉；选项按标题前缀/全等匹配 ----
   const DBG = !!process.env.DBG29;

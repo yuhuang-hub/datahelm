@@ -1,6 +1,6 @@
 'use strict';
-// v0927.52 查询解释（EXPLAIN 执行计划）验证（9229 新实例；自足式：sqlite 自建 dh_w30_t，mssql 用系统表）：
-//  v0927.52 起解释结果默认「树形」视图：断言表格前先点 data-dh-q="plan-grid" 切到表格（页签名 结果1 → 执行计划）
+// v0927.53 查询解释（EXPLAIN 执行计划）验证（9229 新实例；自足式：sqlite 自建 dh_w30_t，mssql 用系统表）：
+//  v0927.53 起解释结果默认「树形」视图：断言表格前先点 data-dh-q="plan-grid" 切到表格（页签名 结果1 → 执行计划）
 //  T1 sqlite EQP：解释 SELECT … WHERE id=1 → 执行计划表格网格含 SEARCH + dh_w30_t
 //  T2 计划列：sqlite EQP 表头含 detail
 //  T3 mssql SHOWPLAN_TEXT：切连接/库 → 解释 COUNT(sys.databases) → 表头 StmtText + 行含 |-- 树形算子
@@ -48,7 +48,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // 可见结果网格文本（ResultGrid 是 virtual 表：行=div、格=.cell；内层结果 Tabs 可能多个 pane-active，取有高度的）
   const gridInfo = () => ev(`(() => {
@@ -136,7 +136,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   // ---- T1 sqlite EQP ----
   if (await setSql('SELECT * FROM dh_w30_t WHERE id = 1')) {
     if (await qBtn('explain')) {
-      // v0927.52：解释默认树形视图，切到表格再走原网格断言（plan-grid 幂等，多点无害）
+      // v0927.53：解释默认树形视图，切到表格再走原网格断言（plan-grid 幂等，多点无害）
       let gridBtn = false;
       for (let i = 0; i < 20 && !gridBtn; i += 1) { gridBtn = await qBtn('plan-grid'); if (!gridBtn) await sleep(300); }
       const g = await waitGrid(['SEARCH', 'dh_w30_t']);

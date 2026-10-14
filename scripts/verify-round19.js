@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 顶部工具栏 + 查询页连接/库下拉（9228 实例 + localhost MSSQL）：
+// v0927.53 顶部工具栏 + 查询页连接/库下拉（9228 实例 + localhost MSSQL）：
 //  T1 工具栏 8 个按钮（连接/新建查询/查询列表/表/视图/ER图/用户/备份）；T1b 未打开连接时 表/视图/新建查询/用户/ER图 禁用；T1c 打开 sqlite 后恢复
 //  T2 工具栏「新建查询」→ 打开查询页：连接下拉=演示 SQLite 库；sqlite 无库下拉；自动连接出 serverInfo
 //  T3 sqlite 跑 SELECT 1+1 → 结果 2
@@ -8,7 +8,7 @@
 //  T6 切回 master → SELECT DB_NAME()=master
 //  T7 工具栏「表」→ 上下文跟随活动查询页（mssql master）→ 新建表设计页打开
 //  T8 关闭设计页（无脏直接关）
-//  S0 版本 v0927.52；S5 无控制台错误
+//  S0 版本 v0927.53；S5 无控制台错误
 const CDP = require('chrome-remote-interface');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 (async () => {
@@ -136,9 +136,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
-  // T1 工具栏 10 按钮（v0927.52 新增 数据同步，位于 结构同步 后）
+  // T1 工具栏 10 按钮（v0927.53 新增 数据同步，位于 结构同步 后）
   const tb = await ev(`(() => {
     const btns = [...document.querySelectorAll('.top-toolbar .tb-btn')];
     return { n: btns.length, labels: btns.map((b) => b.textContent.replace(/\\s+/g, '')), disabled: btns.filter((b) => b.disabled).map((b) => b.textContent.replace(/\\s+/g, '')) };
@@ -147,7 +147,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   tb && tb.n === 10 && JSON.stringify(tb.labels) === JSON.stringify(WANT)
     ? pass('T1 工具栏 10 按钮：' + WANT.join('/'))
     : fail('T1 工具栏按钮', JSON.stringify(tb));
-  // T1b v0927.52 起规则：未打开连接时 表/视图/新建查询/用户/ER图 全禁用；打开连接后按选择恢复
+  // T1b v0927.53 起规则：未打开连接时 表/视图/新建查询/用户/ER图 全禁用；打开连接后按选择恢复
   const DIS_INIT = ['新建查询', '表', '视图', 'ER图', '用户'];
   tb && JSON.stringify(tb.disabled) === JSON.stringify(DIS_INIT)
     ? pass('T1b 初始（未打开连接）：新建查询/表/视图/ER图/用户 全禁用')
@@ -269,7 +269,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     }
   }
 
-  // T7 工具栏「表」→ 上下文跟随活动查询页（mssql master）→ 对象列表页（v0927.52 语义：查看已有清单）
+  // T7 工具栏「表」→ 上下文跟随活动查询页（mssql master）→ 对象列表页（v0927.53 语义：查看已有清单）
   const tb2 = await ev(`(() => { const b = [...document.querySelectorAll('.top-toolbar .tb-btn')].find((x) => x.textContent.replace(/\\s+/g, '') === '表'); if (!b) return null; const r = b.getBoundingClientRect(); return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2), dis: b.disabled }; })()`);
   if (!tb2 || tb2.dis) fail('T7 工具栏表', tb2 ? 'disabled' : 'no button');
   else {

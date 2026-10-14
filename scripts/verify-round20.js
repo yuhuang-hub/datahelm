@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 导入向导验证（9229 实例，sqlite 演示库）：
+// v0927.53 导入向导验证（9229 实例，sqlite 演示库）：
 //  W1 打开 employees 数据页 → 工具栏「导入向导…」→ 四步弹窗（文件/目标/字段映射/执行）
 //  W2 CSV 解析预览：4 列 4 行
 //  W3 新建表 dh_imp_t1：类型推断 整数/文本/整数/文本 → 导入 4 行
@@ -8,7 +8,7 @@
 //  W5 JSON → 新建表 dh_imp_j1 → 2 行（qty 整数 / price 小数）
 //  W6 现有表追加：切目标表下拉 → dh_imp_t1 → 自动映射 → 追加 2 行 → COUNT=6
 //  W7 表分类右键菜单含「导入向导…」
-//  S0 版本 v0927.52；S5 无控制台错误
+//  S0 版本 v0927.53；S5 无控制台错误
 const CDP = require('chrome-remote-interface');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 (async () => {
@@ -192,7 +192,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- 打开 sqlite → 表 → employees（数据页）----
   let p = await treePos('演示 SQLite 库');

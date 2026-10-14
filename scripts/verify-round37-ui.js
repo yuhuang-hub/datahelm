@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 重命名标签页 — UI 端到端验证（9227 新实例；无需夹具，employees 基线表即可）
+// v0927.53 重命名标签页 — UI 端到端验证（9227 新实例；无需夹具，employees 基线表即可）
 //  U0 备标签：连接右键「新建查询」×2 + 双击 employees 开数据页 → [查询1, 查询2, employees]
 //  T1 右键 employees → 菜单含 重命名（清单精确）；点开弹窗预填 employees → 改名 员工表 → 标题变、激活不变、数据网格仍在
 //  T2 右键 员工表 → 重命名 → 清空输入回车 → 警告「标签名不能为空」+ 弹窗不关 + 标题不变；再输入 员工表A → 成功
@@ -84,7 +84,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   let ok = false;
   for (let i = 0; i < 40 && !ok; i += 1) { ok = await ev("!!document.querySelector('.top-toolbar .tb-btn')"); if (!ok) await sleep(500); }
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- U0 备标签 ----
   const connP = await waitTree('演示 SQLite 库', 0);

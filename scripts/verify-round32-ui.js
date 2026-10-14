@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 侧边栏结构明细行右键删除 — UI 端到端验证（9227 测试实例；夹具已备：
+// v0927.53 侧边栏结构明细行右键删除 — UI 端到端验证（9227 测试实例；夹具已备：
 //   sqlite .tmp-ud7/demo-test.db w32_ui（w32_ix/w32_uq）；mssql master.dbo w32_ui_m（ix/uq/fk/ck））
 //  U1 sqlite：索引明细右键 → 删除索引 → 确认 → 分组刷新后条目消失
 //  U2 sqlite：唯一键明细右键 → 删除唯一键 → 消失

@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 启动动画 + ER 图验证（sqlite+mssql 双连接 9228 新实例）：
+// v0927.53 启动动画 + ER 图验证（sqlite+mssql 双连接 9228 新实例）：
 //  S0 状态栏版本 / SP1 ui-debug.log 里 DH-SPLASH shown→closed 且最短展示 ≥800ms
 //  A sqlite：表分类右键「查看 ER 图」→ 画布 + employees 盒子 + PK 行样式 + 缩放 + 拖拽
 //  B mssql：master 右键 ER → dh_er_a/dh_er_b 盒子 + 外键连线存在
@@ -64,13 +64,13 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await sleep(2500);
   // S0 版本
   const ver = await ev(`(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()`);
-  if (/v0927.52/.test(String(ver))) pass('S0 状态栏 v0927.52'); else fail('S0 状态栏 v0927.52', String(ver).slice(0, 120));
+  if (/v0927.53/.test(String(ver))) pass('S0 状态栏 v0927.53'); else fail('S0 状态栏 v0927.53', String(ver).slice(0, 120));
 
   // SP1 启动动画日志：shown→closed，最短展示时长
   try {
     const log = fs.readFileSync('D:/DataHelm/.tmp-ud7/ui-debug.log', 'utf8');
     const ts = (line) => Date.parse(line.slice(0, 24));
-    const shLine = log.split('\n').filter((l) => l.includes('DH-SPLASH shown v0927.52')).pop();
+    const shLine = log.split('\n').filter((l) => l.includes('DH-SPLASH shown v0927.53')).pop();
     const clLine = log.split('\n').filter((l) => l.includes('DH-SPLASH closed')).pop();
     if (shLine && clLine) {
       const dur = ts(clLine) - ts(shLine);

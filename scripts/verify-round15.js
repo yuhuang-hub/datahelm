@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 图标间距 + 库节点品牌图标验证（sqlite+mssql 双连接 9228 新实例）：
+// v0927.53 图标间距 + 库节点品牌图标验证（sqlite+mssql 双连接 9228 新实例）：
 //  A 连接行品牌图标仍在（回归）+ 箭头→图标→标题 间距收紧到 1~8px
 //  B sqlite 分类行仍是 antd 线框文件夹；mssql 展开后 master 库行用品牌 svg（非文件夹）
 const CDP = require('chrome-remote-interface');
@@ -52,7 +52,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await sleep(2500);
   // S0 版本
   const ver = await ev(`(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()`);
-  if (/v0927.52/.test(String(ver))) pass('S0 状态栏 v0927.52'); else fail('S0 状态栏 v0927.52', String(ver).slice(0, 120));
+  if (/v0927.53/.test(String(ver))) pass('S0 状态栏 v0927.53'); else fail('S0 状态栏 v0927.53', String(ver).slice(0, 120));
 
   // A1 sqlite 连接行品牌图标（回归）
   const a1 = await rowGeom('演示 SQLite 库');

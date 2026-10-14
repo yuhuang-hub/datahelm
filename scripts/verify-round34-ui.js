@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 字段明细行「编辑字段」定位 — UI 端到端验证（9227 测试实例；夹具已备：
+// v0927.53 字段明细行「编辑字段」定位 — UI 端到端验证（9227 测试实例；夹具已备：
 //   sqlite .tmp-ud7/demo-test.db w34_col（id/nm/qty/uk + w34_ix）；mssql master.dbo w34_col_m（id/nm/mgr/qty））
 //  U1 sqlite：字段明细行双击 → 设计页签打开 · 内部「字段」页签激活 · 该行高亮(row-focus=字段名)
 //  U1b 手动切到「索引」后再次双击另一字段 → 重新跳回「字段」并高亮（重复定位）
@@ -87,7 +87,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   let ok = false;
   for (let i = 0; i < 40 && !ok; i += 1) { ok = await ev("!!document.querySelector('.top-toolbar .tb-btn')"); if (!ok) await sleep(500); }
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  /v0927\.52/.test(ver) ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  /v0927.53/.test(ver) ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- 展开 sqlite：连接 → 表分类 → w34_col → 字段分组 ----
   if (!(await ensureOpen('演示 SQLite 库', 0))) { fail('U0', '找不到连接节点'); await client.close(); return; }

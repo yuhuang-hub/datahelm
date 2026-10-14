@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 树分组右键与收展悬浮修复：①antd 收展悬浮底板固定 24×24，本应用开关列窄化 16px →
+// v0927.53 树分组右键与收展悬浮修复：①antd 收展悬浮底板固定 24×24，本应用开关列窄化 16px →
 // 底板右溢 8px 压住行首图标；覆盖为 14×16 居中（::before 计算值 14/16/1/4，底板右缘 < 图标左缘），
 // 深色下补可见底板 rgba(255,255,255,.09)。②表展开的结构分组（字段/索引/外键/唯一键/检查）右键新增
 // 「新建X」直达表设计器对应分区并追加空白行（触发器分组 → SQL 模板 ObjEditTab）。
@@ -51,7 +51,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  String(ver).includes('v0927.52') ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  String(ver).includes('v0927.53') ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- 树展开（33ui 成熟打法：node-title 定位 + switcher 真实单击 + -open 回读，外层重试）----
   const waitTree = async (title, idx, tries) => {

@@ -1,12 +1,12 @@
 'use strict';
-// v0927.52 五合一特性验证（夹具 dh_w57：w57s.w57_ord + dbo.w57_cfg + dbo.w57_log(FK→w57_ord)）：
+// v0927.53 五合一特性验证（夹具 dh_w57：w57s.w57_ord + dbo.w57_cfg + dbo.w57_log(FK→w57_ord)）：
 //  ① T1 工具栏「表」→ 对象列表页默认全部架构：w57_ord（架构列=w57s）与 w57_cfg/w57_log（dbo）都在列，ctx 含「全部架构」
 //     T2 架构下拉切 w57s → 仅 w57_ord、无架构列；T3 切回全部 → 行「打开」w57_ord → 2 行（甲/乙）
 //  ② T4 树右键 w57_ord 重命名→w57_ord2 → 树出刷新 + 数据 2 行（纯点分 sp_rename 端到端）
 //  ③ T5 对比弹窗多快照：固定为基准（快照1）→ 跑倒序查询 → 存为快照「倒序」→ 快照下拉切换/删除，capA/stats 随动
 //  ⑤ T6 历史弹窗：搜索过滤（w57_ord2 关键词）；星标收藏 + 只看收藏开/关（无匹配空态）
 //  ④ T7 设计器拖拽列序 → SQL 预览含 __rebuild + 他表 FK 引用横幅（w57_log）
-//  D0/D8 夹具 stage1/check1；S0 版本 v0927.52；S5 无控制台错误；D9 cleanup 放最后
+//  D0/D8 夹具 stage1/check1；S0 版本 v0927.53；S5 无控制台错误；D9 cleanup 放最后
 // 前置：套件自跑 fx-w57 stage1（幂等：整库删建）；结尾 fx-w57 cleanup。运行于独立新实例（battery 保证无实例占用）。
 const { execFileSync } = require('child_process');
 const CDP = require('chrome-remote-interface');
@@ -61,7 +61,7 @@ const fx57 = (mode) => String(execFileSync('node', ['D:/DataHelm/scripts/fx/fx-w
 
   // ---- S0 版本 ----
   const sb = await ev(`document.querySelector('.statusbar').textContent.replace(/\\s+/g, '')`);
-  /v0927\.52/.test(sb) ? pass('S0 状态栏 v0927.52') : fail('S0 状态栏 v0927.52', sb);
+  /v0927.53/.test(sb) ? pass('S0 状态栏 v0927.53') : fail('S0 状态栏 v0927.53', sb);
 
   // ---- D0 夹具 stage1 ----
   try {

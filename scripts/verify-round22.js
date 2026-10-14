@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 ER「选择表」弹层修复 + 根错误边界 验证（9229 新实例，sqlite 演示库 + mssql master）：
+// v0927.53 ER「选择表」弹层修复 + 根错误边界 验证（9229 新实例，sqlite 演示库 + mssql master）：
 //  P1 sqlite ER → 点「选择表」→ 弹层打开（修复前 <Input.AllowClear> 此处 React #130 白屏）
 //  P2 弹层搜索过滤：empl → 命中；zzz → 无匹配表
 //  P3 勾选联动：取消 employees → 按钮计数 0/1；恢复 → 1/1
@@ -7,7 +7,7 @@
 //  P5 mssql master（用户崩溃路径：ER → 选择表）弹层可开可关
 //  B1 正常运行时无 .dh-err-boundary 误触发
 //  B2 边界功能：__dhThrowRender=1 → 触发重渲染 → 兜底 UI + DH-ERR-BOUNDARY 落盘 → 重新加载恢复
-//  S0 版本 v0927.52 / S5 无控制台错误（B2 之前）
+//  S0 版本 v0927.53 / S5 无控制台错误（B2 之前）
 const CDP = require('chrome-remote-interface');
 const fs = require('fs');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -86,7 +86,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ---- S0 版本 ----
   let ver = await ev(`document.querySelector('.statusbar').textContent`);
-  if (/v0927\.52/.test(String(ver))) pass('S0 状态栏 v0927.52'); else fail('S0 状态栏 v0927.52', String(ver).slice(0, 80));
+  if (/v0927.53/.test(String(ver))) pass('S0 状态栏 v0927.53'); else fail('S0 状态栏 v0927.53', String(ver).slice(0, 80));
 
   // ---- P1-P4 sqlite ER 选择表 ----
   let p = await waitTree('演示 SQLite 库', 0, 10);
@@ -260,8 +260,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   if (rl) {
     await lclick(rl.x, rl.y);
     let back = false;
-    for (let i = 0; i < 24 && !back; i += 1) { back = !!await ev("(function(){ const s = document.querySelector('.statusbar'); return !!(s && /v0927\\.52/.test(s.textContent) && document.querySelectorAll('.tree-wrap .node-title').length); })()"); if (!back) await sleep(500); }
-    back ? pass('B3 重新加载后应用恢复（v0927.52 状态栏 + 树在）') : fail('B3 重新加载恢复', 'app not back');
+    for (let i = 0; i < 24 && !back; i += 1) { back = !!await ev("(function(){ const s = document.querySelector('.statusbar'); return !!(s && /v0927\\.53/.test(s.textContent) && document.querySelectorAll('.tree-wrap .node-title').length); })()"); if (!back) await sleep(500); }
+    back ? pass('B3 重新加载后应用恢复（v0927.53 状态栏 + 树在）') : fail('B3 重新加载恢复', 'app not back');
   } else fail('B3 重新加载按钮', '未找到');
 
   await client.close();

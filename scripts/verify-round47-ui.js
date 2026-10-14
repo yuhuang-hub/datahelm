@@ -1,5 +1,5 @@
 'use strict';
-// v0927.52 补全设置面板：SQL 片段自定义（新建/编辑/删除/恢复默认）+ 片段/关键字补全开关，
+// v0927.53 补全设置面板：SQL 片段自定义（新建/编辑/删除/恢复默认）+ 片段/关键字补全开关，
 // localStorage(dh_completion_v1) 持久化并经 dh-completion-change 广播——编辑器已挂载时开关/增删
 // 即时生效（弹层打开时经 ref 读最新配置，不重建 CodeMirror 扩展）。
 // 入口：状态栏齿轮(data-dh-cs=open) + 查询编辑器右键「补全设置…」。内置 7 片段与此前硬编码一致。
@@ -51,7 +51,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // S0 版本
   const ver = await ev("(() => { const s = document.querySelector('.statusbar'); return s ? s.textContent : ''; })()");
-  String(ver).includes('v0927.52') ? pass('S0 版本 v0927.52') : fail('S0 版本', String(ver).slice(0, 120));
+  String(ver).includes('v0927.53') ? pass('S0 版本 v0927.53') : fail('S0 版本', String(ver).slice(0, 120));
 
   // ---- 补全设置弹窗：面板状态读取（锁定可见 wrap 内的 .acset-bar，关闭态 wrap 隐藏）----
   const acInfo = () => ev(`(() => {
