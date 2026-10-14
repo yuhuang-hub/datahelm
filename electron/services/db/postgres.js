@@ -574,28 +574,34 @@ async function create(cfg, localPort) {
     },
 
     // ---- 备份导出 ----
-    async dumpTable({ schema, table }) {
+    // content：'all' 结构+数据（备份/默认） / 'structure' 仅结构 / 'data' 仅数据（视图无数据可导，跳过）
+    async dumpTable({ schema, table, content = 'all' }) {
       const parts = [];
       const isView = (await client.query(
         "SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname=$1 AND c.relname=$2 AND c.relkind='v'",
         [schema || 'public', table]
       )).rows.length;
-      if (isView) {
-        parts.push(await s.objectDdl({ schema, kind: 'view', name: table }));
-      } else {
-        parts.push(await s.ddl({ schema, table }));
+      if (content === 'data' && isView) return `-- 视图 ${table} 无数据可导出`;
+      if (content !== 'data') {
+        if (isView) {
+          parts.push(await s.objectDdl({ schema, kind: 'view', name: table }));
+        } else {
+          parts.push(await s.ddl({ schema, table }));
+        }
       }
       const cols = await s.columns({ schema, table });
       const full = U.qualify(D, null, schema, table);
       const colList = cols.map((c) => U.q(D, c.name)).join(', ');
       const BATCH = 500;
-      for (let page = 1; ; page += 1) {
-        const r = await s.page({ schema, table, pageNo: page, pageSize: BATCH });
-        if (!r.rows.length) break;
-        for (const row of r.rows) {
-          parts.push(`INSERT INTO ${full} (${colList}) VALUES (${row.map((v) => U.lit(D, v)).join(', ')});`);
+      if (content !== 'structure') {
+        for (let page = 1; ; page += 1) {
+          const r = await s.page({ schema, table, pageNo: page, pageSize: BATCH });
+          if (!r.rows.length) break;
+          for (const row of r.rows) {
+            parts.push(`INSERT INTO ${full} (${colList}) VALUES (${row.map((v) => U.lit(D, v)).join(', ')});`);
+          }
+          if (r.rows.length < BATCH) break;
         }
-        if (r.rows.length < BATCH) break;
       }
       return parts.join('\n');
     },

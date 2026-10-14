@@ -21,12 +21,14 @@ contextBridge.exposeInMainWorld('api', {
       return () => { try { ipcRenderer.removeListener('db:syncProgress', h); } catch {} };
     },
     dataApply: (payload) => ipcRenderer.invoke('db:dataApply', payload),
+    dump: (payload) => ipcRenderer.invoke('db:dump', payload),
     explain: (payload) => ipcRenderer.invoke('db:explain', payload),
   },
   pickFile: (opts) => ipcRenderer.invoke('sys:pickFile', opts),
   imp: { parse: (file) => ipcRenderer.invoke('imp:parse', { file }) },
   pickDir: (opts) => ipcRenderer.invoke('sys:pickDir', opts),
   saveFile: (opts) => ipcRenderer.invoke('sys:saveFile', opts),
+  pickSavePath: (opts) => ipcRenderer.invoke('sys:pickSavePath', opts),
   openPath: (p) => ipcRenderer.invoke('sys:openPath', p),
   copy: (text) => ipcRenderer.invoke('sys:copy', text),
   app: {

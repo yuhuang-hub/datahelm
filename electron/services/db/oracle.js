@@ -449,30 +449,35 @@ async function create(cfg, localPort) {
     },
 
     // ---- 备份导出 ----
-    async dumpTable({ schema, table }) {
+    // content：'all' 结构+数据（备份/默认） / 'structure' 仅结构 / 'data' 仅数据
+    async dumpTable({ schema, table, content = 'all' }) {
       const parts = [];
-      try {
-        parts.push(await s.ddl({ schema, table }) + ';');
-      } catch {
-        parts.push('-- 无法取得 ' + table + ' 的 DDL');
+      if (content !== 'data') {
+        try {
+          parts.push(await s.ddl({ schema, table }) + ';');
+        } catch {
+          parts.push('-- 无法取得 ' + table + ' 的 DDL');
+        }
       }
       const cols = await s.columns({ schema, table });
       const full = U.qualify(D, null, schema, table);
       const colList = cols.map((c) => U.q(D, c.name)).join(', ');
       const BATCH = 500;
-      for (let page = 1; ; page += 1) {
-        const r = await run(
-          `SELECT * FROM (SELECT t.*, ROWNUM rn FROM (SELECT ${colList} FROM ${full}) t WHERE ROWNUM <= :hi) WHERE rn > :lo`,
-          { hi: page * BATCH, lo: (page - 1) * BATCH },
-          { maxRows: BATCH + 10 }
-        );
-        if (!r.rows.length) break;
-        for (const row of r.rows) {
-          parts.push(
-            `INSERT INTO ${full} (${colList}) VALUES (${cols.map((c, i) => U.lit(D, row[i])).join(', ')});`
+      if (content !== 'structure') {
+        for (let page = 1; ; page += 1) {
+          const r = await run(
+            `SELECT * FROM (SELECT t.*, ROWNUM rn FROM (SELECT ${colList} FROM ${full}) t WHERE ROWNUM <= :hi) WHERE rn > :lo`,
+            { hi: page * BATCH, lo: (page - 1) * BATCH },
+            { maxRows: BATCH + 10 }
           );
+          if (!r.rows.length) break;
+          for (const row of r.rows) {
+            parts.push(
+              `INSERT INTO ${full} (${colList}) VALUES (${cols.map((c, i) => U.lit(D, row[i])).join(', ')});`
+            );
+          }
+          if (r.rows.length < BATCH) break;
         }
-        if (r.rows.length < BATCH) break;
       }
       return parts.join('\n');
     },

@@ -13,7 +13,9 @@
     "**/*.wasm"
   ],
   "mac": {
-    "identity": null,
+    "identity": "yu huang (MH8P9MLTL3)",
+    "notarize": true,
+    "hardenedRuntime": true,
     "category": "public.app-category.developer-tools",
     "target": [
       { "target": "dmg", "arch": ["x64", "arm64"] }

@@ -571,6 +571,54 @@ async function openTemp(id) {
   return openSession(cfg);
 }
 
+// ---- 数据库导出（转储 SQL 文件）：按 content 逐表 dumpTable，主进程直写目标文件 ----
+// content：'all' 结构+数据 / 'structure' 仅结构 / 'data' 仅数据；tables 缺省=全部表（含视图）
+// 前台会话直接复用；未打开则临时会话用完即关。逐表失败不中断（错误写进文件注释并汇总返回）
+async function dumpDatabase({ connId, db = '', schema = '', tables = null, content = 'all', file }, onProgress) {
+  const cfg = store.get(connId);
+  if (!cfg) throw new Error('连接不存在（可能已被删除）');
+  if (!RELATIONAL.includes(cfg.type)) throw new Error('该连接类型不支持导出');
+  if (typeof file !== 'string' || !file.trim()) throw new Error('未指定导出文件');
+  const fs = require('fs');
+  const reuse = sessions.has(connId);
+  const sess = reuse ? sessions.get(connId) : await openSession(cfg);
+  try {
+    const ctx = { db: db || undefined, schema: schema || undefined };
+    const list = Array.isArray(tables) && tables.length ? tables : await sess.tables(ctx);
+    const mode = content === 'structure' ? '仅结构' : content === 'data' ? '仅数据' : '结构+数据';
+    fs.writeFileSync(file, [
+      '-- DataHelm 数据库导出',
+      `-- 连接: ${cfg.name}（${cfg.type}）  数据库: ${db || '-'}  schema: ${schema || '-'}`,
+      `-- 内容: ${mode}`,
+      `-- 生成时间: ${new Date().toLocaleString('zh-CN')}`,
+      `-- 共 ${list.length} 个对象`,
+      '',
+      '',
+    ].join('\n'), 'utf8');
+    const prog = (p) => { if (onProgress) { try { onProgress(p); } catch {} } };
+    // setImmediate 让步事件循环冲刷进度 IPC（sqlite 的 sql.js 是同步阻塞，见 syncCompare 同款注释）
+    const yieldLoop = () => (onProgress ? new Promise((r) => setImmediate(r)) : null);
+    let ok = 0;
+    const errs = [];
+    for (let i = 0; i < list.length; i += 1) {
+      const name = list[i];
+      prog({ table: name, index: i + 1, total: list.length });
+      await yieldLoop();
+      try {
+        const sql = await sess.dumpTable({ ...ctx, table: name, content });
+        fs.appendFileSync(file, `-- ---------- ${name} ----------\n${sql}\n\n`, 'utf8');
+        ok += 1;
+      } catch (e) {
+        fs.appendFileSync(file, `-- ---------- ${name} ----------\n-- 导出失败: ${e.message}\n\n`, 'utf8');
+        errs.push({ table: name, error: e.message });
+      }
+    }
+    return { file, objects: list.length, ok, errors: errs };
+  } finally {
+    if (!reuse) { try { sess.close(); } catch {} }
+  }
+}
+
 // ---- 运行 SQL 文件（还原备份）：把 .sql 脚本逐句在目标连接原样执行 ----
 // text 由 IPC 边界（main.js）校验文件后读出传入；语句经 call('query') 逐句执行——
 // 与查询页完全同一条分发路径（驱动内部按方言处理注释/引号/GO/DELIMITER），本层不做任何拼接改写；
@@ -641,4 +689,4 @@ async function explainQuery({ connId, db, schema, sqlText }) {
   return { columns, rows, rowCount: rows.length, elapsed: Date.now() - t0 };
 }
 
-module.exports = { open, close, test, call, transfer, closeTransfers, openTemp, syncCompare, closeSyncSessions, dataCompare, dataApply, runSqlFile, explainQuery };
+module.exports = { open, close, test, call, transfer, closeTransfers, openTemp, syncCompare, closeSyncSessions, dataCompare, dataApply, runSqlFile, explainQuery, dumpDatabase };

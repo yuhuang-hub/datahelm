@@ -11,7 +11,9 @@
     "build": "vite build",
     "start": "electron .",
     "selftest": "node scripts/selftest.js",
-    "dist:win": "vite build && electron-builder --win nsis portable"
+    "dist:win": "vite build && electron-builder --win nsis portable",
+    "dist:mac": "vite build && electron-builder --mac dmg --arm64 --x64",
+    "dist:mac:notarize": "vite build && APPLE_API_KEY=$HOME/.appstoreconnect/private_keys/AuthKey_9P8U9469VG.p8 APPLE_API_KEY_ID=9P8U9469VG APPLE_API_ISSUER=a7c6cc85-1872-4b3f-baaf-75798e9e51b9 ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ ELECTRON_BUILDER_BINARIES_MIRROR=https://npmmirror.com/mirrors/electron-builder-binaries/ electron-builder --mac dmg --arm64 --x64"
   },
   "dependencies": {
     "ioredis": "^6.0.0",

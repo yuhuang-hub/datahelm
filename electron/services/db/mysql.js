@@ -407,24 +407,29 @@ async function create(cfg, localPort) {
     },
 
     // ---- 备份导出 ----
-    async dumpTable({ db, table }) {
+    // content：'all' 结构+数据（备份/默认） / 'structure' 仅结构 / 'data' 仅数据
+    async dumpTable({ db, table, content = 'all' }) {
       const parts = [];
-      try {
-        parts.push(await s.ddl({ db, table }) + ';');
-      } catch {
-        parts.push('-- 无法取得 ' + table + ' 的 DDL');
+      if (content !== 'data') {
+        try {
+          parts.push(await s.ddl({ db, table }) + ';');
+        } catch {
+          parts.push('-- 无法取得 ' + table + ' 的 DDL');
+        }
       }
       const cols = await s.columns({ db, table });
       const full = U.qualify(D, db, null, table);
       const colList = cols.map((c) => U.q(D, c.name)).join(', ');
       const BATCH = 500;
-      for (let page = 1; ; page += 1) {
-        const r = await s.page({ db, table, pageNo: page, pageSize: BATCH });
-        if (!r.rows.length) break;
-        for (const row of r.rows) {
-          parts.push(`INSERT INTO ${full} (${colList}) VALUES (${row.map((v) => U.lit(D, v)).join(', ')});`);
+      if (content !== 'structure') {
+        for (let page = 1; ; page += 1) {
+          const r = await s.page({ db, table, pageNo: page, pageSize: BATCH });
+          if (!r.rows.length) break;
+          for (const row of r.rows) {
+            parts.push(`INSERT INTO ${full} (${colList}) VALUES (${row.map((v) => U.lit(D, v)).join(', ')});`);
+          }
+          if (r.rows.length < BATCH) break;
         }
-        if (r.rows.length < BATCH) break;
       }
       return parts.join('\n');
     },

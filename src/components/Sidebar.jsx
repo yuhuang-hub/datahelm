@@ -9,8 +9,9 @@ import {
   SafetyCertificateOutlined, ScheduleOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SwapOutlined, SunOutlined,
   TableOutlined, TagOutlined, ThunderboltOutlined, UndoOutlined,
 } from '@ant-design/icons';
-import { dbApi, dbTransfer, copyText, pickFile, saveFile, modelApi } from '../api';
+import { dbApi, dbTransfer, copyText, pickFile, modelApi } from '../api';
 import DbIcon, { DbCylIcon } from './DbIcons';
+import DumpModal from './DumpModal';
 import ExportModal from './ExportModal';
 import FloatMenu from './FloatMenu';
 
@@ -73,6 +74,7 @@ export default function Sidebar({ conns, sessions, actions, ver, dark, onToggleD
   const [children, setChildren] = useState({}); // key -> 子节点数组（含 key/connId）
   const [prompt, setPrompt] = useState(null); // {title, label, value, onOk}
   const [transfer, setTransfer] = useState(null); // {connId, db, schema, table}
+  const [dump, setDump] = useState(null); // 数据库导出弹窗 {connId, db, schema, tables?, lockTables?, title?}
   const [ctxMenu, setCtxMenu] = useState(null); // {x, y, node} 右键菜单（整行触发）
   const [expState, setExpState] = useState(null); // 导出数据弹窗（表右键）
   const titleEls = useRef(new Map()); // .node-title DOM 元素 -> 节点数据（双击委托用）
@@ -537,6 +539,15 @@ export default function Sidebar({ conns, sessions, actions, ver, dark, onToggleD
           ? { key: 'transferdb', label: '数据传输…', icon: <SwapOutlined />, onClick: () => setTransfer({ connId: node.connId, db: node.db, schema: node.schema }) }
           : null,
         !isMongo && conn && RELATIONAL.includes(conn.type)
+          ? {
+              key: 'dumpdb',
+              label: '导出数据库…',
+              icon: <ExportOutlined />,
+              // 转储 SQL 文件：可选仅架构 / 仅数据 / 架构+数据（DumpModal）
+              onClick: () => setDump({ connId: node.connId, db: node.db, schema: node.schema, title: `导出数据库「${node.name}」` }),
+            }
+          : null,
+        !isMongo && conn && RELATIONAL.includes(conn.type)
           ? { key: 'syncdb', label: '结构同步…', icon: <DiffOutlined />, onClick: () => actions.openSync({ connId: node.connId, db: node.db || '', schema: node.schema || '' }) }
           : null,
         !isMongo && conn && RELATIONAL.includes(conn.type)
@@ -637,6 +648,13 @@ export default function Sidebar({ conns, sessions, actions, ver, dark, onToggleD
         newItems.push({ key: 'nt', label: '新建表', icon: <PlusOutlined />, onClick: () => actions.newTable({ connId: node.connId, db: node.db, schema: node.schema }) });
         if (conn && RELATIONAL.includes(conn.type)) {
           newItems.push({ key: 'transferdb', label: '数据传输…', icon: <SwapOutlined />, onClick: () => setTransfer({ connId: node.connId, db: node.db, schema: node.schema }) });
+          // sqlite 树没有库节点：表分类节点即库级导出入口
+          newItems.push({
+            key: 'dumpdb',
+            label: '导出数据库…',
+            icon: <ExportOutlined />,
+            onClick: () => setDump({ connId: node.connId, db: node.db, schema: node.schema, title: `导出数据库「${node.db || node.schema || (conn && conn.name) || ''}」` }),
+          });
           newItems.push({ key: 'syncdb', label: '结构同步…', icon: <DiffOutlined />, onClick: () => actions.openSync({ connId: node.connId, db: node.db || '', schema: node.schema || '' }) });
           newItems.push({ key: 'datasync', label: '数据同步…', icon: <DatabaseOutlined />, onClick: () => actions.openDataSync({ connId: node.connId, db: node.db || '', schema: node.schema || '' }) });
           newItems.push({ key: 'impw', label: '导入向导…', icon: <ImportOutlined />, onClick: () => actions.openImport({ connId: node.connId, db: node.db, schema: node.schema }) });
@@ -817,18 +835,9 @@ export default function Sidebar({ conns, sessions, actions, ver, dark, onToggleD
         : node.schema
           ? `${node.schema}.${node.name}`
           : node.name;
-    const dumpSql = () =>
-      dbApi(node.connId, 'dumpTable', { db: node.db, schema: node.schema, table: node.name })
-        .then((sql) =>
-          saveFile({
-            title: `导出「${node.name}」为 SQL 文件`,
-            defaultPath: `${node.name}.sql`,
-            filters: [{ name: 'SQL', extensions: ['sql'] }],
-            content: sql,
-          })
-        )
-        .then((p) => { if (p) message.success(`已导出：${p}`); })
-        .catch((e) => message.error(`导出失败：${e.message}`));
+    // 导出 SQL 转储：经 DumpModal 选择内容（仅架构/仅数据/架构+数据），主进程逐表写出
+    const openDump = () =>
+      setDump({ connId: node.connId, db: node.db, schema: node.schema, tables: [node.name], lockTables: true, title: `导出表「${node.name}」` });
     const showCount = () =>
       dbApi(node.connId, 'page', { db: node.db, schema: node.schema, table: node.name, pageNo: 1, pageSize: 1 })
         .then((r) => Modal.info({ title: '查看行数', content: `「${node.name}」共 ${r.total} 行` }))
@@ -903,7 +912,7 @@ export default function Sidebar({ conns, sessions, actions, ver, dark, onToggleD
               }),
           }
         : null,
-      canTransfer ? { key: 'dump', label: '导出 SQL 转储…', icon: <ExportOutlined />, onClick: dumpSql } : null,
+      canTransfer ? { key: 'dump', label: '导出 SQL 转储…', icon: <ExportOutlined />, onClick: openDump } : null,
       { type: 'divider' },
       isTable && canTransfer ? { key: 'csv', label: '导入 CSV…', icon: <ImportOutlined />, onClick: () => importCsv(ctx) } : null,
       isTable && canTransfer ? { key: 'transfer', label: '数据传输…', icon: <SwapOutlined />, onClick: () => setTransfer(ctx) } : null,
@@ -1049,6 +1058,7 @@ export default function Sidebar({ conns, sessions, actions, ver, dark, onToggleD
       )}
       <PromptModal state={prompt} onClose={() => setPrompt(null)} />
       <TransferModal state={transfer} conns={conns} onClose={() => setTransfer(null)} />
+      <DumpModal state={dump} conns={conns} onClose={() => setDump(null)} />
       <ExportModal state={expState} onClose={() => setExpState(null)} />
     </div>
   );

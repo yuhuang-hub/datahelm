@@ -469,21 +469,25 @@ async function create(cfg) {
     },
 
     // ---- 备份导出 ----
-    async dumpTable({ table }) {
+    // content：'all' 结构+数据（备份/默认） / 'structure' 仅结构 / 'data' 仅数据（视图无数据可导，跳过）
+    async dumpTable({ table, content = 'all' }) {
       const parts = [];
-      const row = all('SELECT sql FROM sqlite_master WHERE type IN (\'table\',\'view\') AND name = ?', [table])[0];
-      parts.push(row ? row.sql + ';' : '-- 未找到 ' + table);
+      const row = all('SELECT sql, type FROM sqlite_master WHERE type IN (\'table\',\'view\') AND name = ?', [table])[0];
+      if (content === 'data' && row && row.type === 'view') return `-- 视图 ${table} 无数据可导出`;
+      if (content !== 'data') parts.push(row ? row.sql + ';' : '-- 未找到 ' + table);
       const cols = await s.columns({ table });
       const full = U.q(D, table);
       const colList = cols.map((c) => U.q(D, c.name)).join(', ');
       const BATCH = 500;
-      for (let page = 1; ; page += 1) {
-        const r = await s.page({ table, pageNo: page, pageSize: BATCH });
-        if (!r.rows.length) break;
-        for (const rw of r.rows) {
-          parts.push(`INSERT INTO ${full} (${colList}) VALUES (${rw.map((v) => U.lit(D, v)).join(', ')});`);
+      if (content !== 'structure') {
+        for (let page = 1; ; page += 1) {
+          const r = await s.page({ table, pageNo: page, pageSize: BATCH });
+          if (!r.rows.length) break;
+          for (const rw of r.rows) {
+            parts.push(`INSERT INTO ${full} (${colList}) VALUES (${rw.map((v) => U.lit(D, v)).join(', ')});`);
+          }
+          if (r.rows.length < BATCH) break;
         }
-        if (r.rows.length < BATCH) break;
       }
       return parts.join('\n');
     },

@@ -278,6 +278,16 @@ ipcMain.handle('db:dataApply', async (_e, payload) => {
     return { ok: false, error: (err && err.message) || String(err) };
   }
 });
+// 数据库导出（转储 SQL 文件）：主进程逐表写出目标文件；逐表进度复用 db:syncProgress 通道（kind='dump' 区分）
+ipcMain.handle('db:dump', async (e, payload) => {
+  try {
+    const reqId = (payload && payload.reqId) || '';
+    const onProg = (p) => { try { e.sender.send('db:syncProgress', Object.assign({}, p, { kind: 'dump', reqId })); } catch {} };
+    return { ok: true, data: await db.dumpDatabase(payload || {}, onProg) };
+  } catch (err) {
+    return { ok: false, error: (err && err.message) || String(err) };
+  }
+});
 
 // ---- 系统 ----
 ipcMain.handle('sys:pickFile', async (_e, opts) => {
@@ -313,6 +323,16 @@ ipcMain.handle('sys:saveFile', async (_e, opts) => {
   if (o.base64) fs.writeFileSync(r.filePath, Buffer.from(String(o.content || ''), 'base64'));
   else fs.writeFileSync(r.filePath, String(o.content == null ? '' : o.content), 'utf8');
   return r.filePath;
+});
+// 仅选取保存路径（不写盘）：数据库导出等内容由主进程流式写出，大文件不在渲染层中转
+ipcMain.handle('sys:pickSavePath', async (_e, opts) => {
+  const o = opts || {};
+  const r = await dialog.showSaveDialog({
+    title: o.title || '保存文件',
+    defaultPath: o.defaultPath,
+    filters: o.filters,
+  });
+  return r.canceled || !r.filePath ? null : r.filePath;
 });
 
 // ---- 导入向导：文件解析（CSV/JSON → 表头+全量行，渲染端做预览/映射） ----

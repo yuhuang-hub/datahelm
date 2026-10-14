@@ -16,6 +16,7 @@ export const impApi = {
 };
 export const pickDir = bridge.pickDir;
 export const saveFile = bridge.saveFile;
+export const pickSavePath = bridge.pickSavePath;
 export const openPath = bridge.openPath;
 export const copyText = bridge.copy;
 export const queriesApi = bridge.queries;
@@ -55,6 +56,14 @@ export async function dbDataCompare(payload) {
 }
 export async function dbDataApply(payload) {
   const r = await bridge.db.dataApply(payload);
+  if (!r) throw new Error('主进程无响应');
+  if (!r.ok) throw new Error(r.error || '未知错误');
+  return r.data;
+}
+
+// 数据库导出（转储 SQL 文件）：主进程逐表写出目标文件；进度经 subscribeSyncProgress(kind='dump') 回推
+export async function dbDump(payload) {
+  const r = await bridge.db.dump(payload);
   if (!r) throw new Error('主进程无响应');
   if (!r.ok) throw new Error(r.error || '未知错误');
   return r.data;
