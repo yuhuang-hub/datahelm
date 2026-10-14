@@ -8,3 +8,6 @@ release/
 .tmp-*/
 *.blockmap
 Thumbs.db
+# 本地数据库转储产物（含真实数据/凭据，禁止入库）
+ruoyi-vue-pro.sql
+*.dump.sql
